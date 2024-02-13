@@ -1,7 +1,9 @@
 /* @refresh reload */
 import { render } from "solid-js/web"
+import { Router } from "@solidjs/router"
 
 import "./styles.css"
-import App from "./App"
+import DefaultLayout from "./layouts/default"
+import { routes } from "./routers/routes"
 
-render(() => <App />, document.getElementById("root"))
+render(() => <Router root={DefaultLayout}>{routes}</Router>, document.getElementById("root"))
