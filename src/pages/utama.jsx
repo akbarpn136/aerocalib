@@ -1,7 +1,7 @@
+import Info from "../components/info"
+
 export default function HalamanUtama() {
-    return <div class="p-4 sm:ml-64">
-        <div class="p-4 mt-14">
-            <p>INI HALAMAN UTAMA.</p>
-        </div>
+    return <div class="sm:ml-64">
+        <Info />
     </div >
 }
