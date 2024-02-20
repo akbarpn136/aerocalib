@@ -6,6 +6,7 @@ import SimpleSidebar from "../components/sidebar"
 
 function DefaultLayout(props) {
     onMount(() => {
+        console.log(import.meta.env.VITE_SUPABASE_URL)
         if (!localStorage.getItem("color-theme")) {
             localStorage.setItem("color-theme", "light");
         }
