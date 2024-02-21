@@ -38,7 +38,7 @@ export default function SimpleNavbar() {
                         </svg>
                     </button>
                     <A href="/" end={true} class="flex ms-2 md:me-24">
-                        <img src="logo.svg" class="h-8 me-3" alt="AeroCalib Logo" />
+                        <img src="/logo.svg" class="h-8 me-3" alt="AeroCalib Logo" />
                         <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
                             Kalibrasi LA3
                         </span>
