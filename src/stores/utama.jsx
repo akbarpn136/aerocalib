@@ -9,4 +9,5 @@ export const StateUtama = {
         import.meta.env.VITE_SUPABASE_KEY,
         { db: { schema: "aerocalib" } }
     ),
+    kegiatan: []
 }
