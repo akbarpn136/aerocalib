@@ -12,7 +12,7 @@ export default function DaftarKegiatan() {
             const { data } = await state.db
                 .from("kegiatan")
                 .select("id, nama")
-                .limit(10)
+                .limit(import.meta.env.VITE_LIMIT_KEGIATAN)
                 .order("created_at", { ascending: false })
 
             data.map(kegiatan => {
