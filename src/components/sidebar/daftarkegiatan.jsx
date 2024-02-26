@@ -20,7 +20,7 @@ export default function DaftarKegiatan() {
             const from = limit * (pageKegiatan() - 1)
             const to = pageKegiatan() * limit - 1
 
-            const { data } = await state.db
+            const { data } = await state.supa
                 .from("kegiatan")
                 .select("id, nama")
                 .order("created_at", { ascending: false })
