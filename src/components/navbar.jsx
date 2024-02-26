@@ -1,15 +1,9 @@
 import { A } from "@solidjs/router"
-import { Show, Switch, Match, createSignal, onMount, useContext } from "solid-js"
+import { Switch, Match, createSignal, onMount } from "solid-js"
 
-import { ContextUtama } from "../stores/utama"
 
 export default function SimpleNavbar() {
-    const { state, setState } = useContext(ContextUtama)
-
     const [toggle, setToggle] = createSignal(false)
-    const [hiddenMuat, setHiddenMuat] = createSignal(false)
-    const [loadingMuat, setLoadingMuat] = createSignal(false)
-    const [pageKegiatan, setPageKegiatan] = createSignal(1)
 
     const setTheme = () => {
         const theme = localStorage.getItem("color-theme")
