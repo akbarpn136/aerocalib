@@ -7,7 +7,6 @@ export const StateUtama = {
     db: createClient(
         import.meta.env.VITE_SUPABASE_URL,
         import.meta.env.VITE_SUPABASE_KEY,
-        { db: { schema: "aerocalib" } }
     ),
     kegiatan: []
 }
