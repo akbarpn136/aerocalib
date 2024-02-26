@@ -34,35 +34,6 @@ export default function SimpleNavbar() {
         }
     })
 
-    const onPageKegiatan = async () => {
-        setPageKegiatan(pageKegiatan() + 1)
-        setLoadingMuat(true)
-
-        try {
-            const limit = import.meta.env.VITE_LIMIT_KEGIATAN
-            const from = limit * (pageKegiatan() - 1)
-            const to = pageKegiatan() * limit - 1
-
-            const { data } = await state.db
-                .from("kegiatan")
-                .select("id, nama")
-                .order("created_at", { ascending: false })
-                .range(from, to)
-
-            if (data.length == 0) {
-                setHiddenMuat(true)
-            } else {
-                data.map(kegiatan => {
-                    setState("kegiatan", [...state.kegiatan, kegiatan])
-                })
-            }
-
-            setLoadingMuat(false)
-        } catch (err) {
-            throw new Error(err)
-        }
-    }
-
     return <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
         <div class="px-3 py-3 lg:px-5 lg:pl-3">
             <div class="flex items-center justify-between">
