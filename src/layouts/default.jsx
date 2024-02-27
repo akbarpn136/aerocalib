@@ -1,10 +1,10 @@
 import "flowbite"
-import { onMount, useContext } from "solid-js"
+import { onMount } from "solid-js"
 
 import SimpleNavbar from "../components/navbar"
 import SimpleSidebar from "../components/sidebar"
 
-function DefaultLayout(props) {
+export default function DefaultLayout(props) {
     onMount(() => {
         if (!localStorage.getItem("color-theme")) {
             localStorage.setItem("color-theme", "light");
@@ -22,5 +22,3 @@ function DefaultLayout(props) {
         </section>
     </>
 }
-
-export default DefaultLayout
