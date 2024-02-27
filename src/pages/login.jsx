@@ -5,7 +5,7 @@ export default function HalamanUtama() {
                 <div class="p-4 md:p-8 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <form class="space-y-6" action="#">
                         <h5 class="text-xl font-medium text-gray-900 dark:text-white">
-                            🔐 Silahkan otentikasi dulu
+                            🔐 Silahkan autentikasi dulu
                         </h5>
                         <div>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
