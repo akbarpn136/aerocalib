@@ -13,10 +13,12 @@ render(() => {
     const [state, setState] = createStore(StateUtama)
 
     return <ContextUtama.Provider value={{ state, setState }}>
-        <Router root={DefaultLayout}>
-            <RouterKegiatan />
+        <Router>
+            <Route path="/" component={DefaultLayout}>
+                <Route path="/" component={lazy(() => import("./pages/utama.jsx"))} />
+                <RouterKegiatan />
+            </Route>
             <Route path="/login" component={lazy(() => import("./pages/login.jsx"))} />
-            <Route path="/" component={lazy(() => import("./pages/utama.jsx"))} />
             <Route path="*404" component={lazy(() => import("./pages/404.jsx"))} />
         </Router>
     </ContextUtama.Provider>
