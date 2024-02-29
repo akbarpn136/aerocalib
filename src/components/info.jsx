@@ -27,7 +27,7 @@ export function InfoUmum() {
 
 export function Info404() {
     return <div class="flex h-screen">
-        <div class="py-8 px-4 m-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
+        <div class="py-8 px-4 m-auto text-center lg:py-16 z-10 relative">
             <A href="/" class="mt-14 inline-flex justify-between items-center py-1 px-1 pe-4 mb-7 text-sm text-red-700 bg-red-100 rounded-full dark:bg-red-900 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800">
                 <span class="text-xs bg-red-600 rounded-full text-white px-4 py-1.5 me-3">
                     <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
