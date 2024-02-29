@@ -7,6 +7,7 @@ import { createStore } from "solid-js/store"
 import "./styles.css"
 import RouterKegiatan from "./routers/kegiatan"
 import DefaultLayout from "./layouts/default"
+import FullCenterLayout from "./layouts/full.jsx"
 import { StateUtama, ContextUtama } from "./stores/utama"
 
 render(() => {
@@ -18,8 +19,10 @@ render(() => {
                 <Route path="/" component={lazy(() => import("./pages/utama.jsx"))} />
                 <RouterKegiatan />
             </Route>
-            <Route path="/login" component={lazy(() => import("./pages/login.jsx"))} />
-            <Route path="*404" component={lazy(() => import("./pages/404.jsx"))} />
+            <Route path="/" component={FullCenterLayout}>
+                <Route path="/login" component={lazy(() => import("./pages/login.jsx"))} />
+                <Route path="*404" component={lazy(() => import("./pages/404.jsx"))} />
+            </Route>
         </Router>
     </ContextUtama.Provider>
 }, document.getElementById("root"))
