@@ -20,7 +20,7 @@ export default function HalamanLogin() {
         }
     })
 
-    const onFormKegiatanSubmit = async (e) => {
+    const onFormAutentikasiSubmit = async (e) => {
         e.preventDefault()
         setLihat(false)
 
@@ -34,13 +34,13 @@ export default function HalamanLogin() {
             setLihat(true)
         } else {
             setLihat(false)
-            goto("/", { replace: true })
+            goto("/", { replace: false })
         }
     }
 
     return <div class="m-auto w-full md:w-96 p-2 z-10 relative">
         <div class="p-4 md:p-8 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <form class="space-y-6" onSubmit={onFormKegiatanSubmit}>
+            <form class="space-y-6" onSubmit={onFormAutentikasiSubmit}>
                 <h5 class="text-xl font-medium text-gray-900 dark:text-white">
                     🔐 Silahkan autentikasi dulu
                 </h5>
@@ -68,13 +68,6 @@ export default function HalamanLogin() {
                     class="uppercase w-full text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                     Batal
                 </button>
-                <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                    Belum daftar? <a href="#" class="text-blue-700 hover:underline dark:text-blue-500">
-                        Bikin akun
-                    </a> atau <a href="#" class="ms-auto text-sm text-blue-700 hover:underline dark:text-blue-500">
-                        lupa sandi?
-                    </a>
-                </div>
             </form>
         </div>
 
