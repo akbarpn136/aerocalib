@@ -12,7 +12,6 @@ export default function DaftarKegiatan() {
     const [loadingMuat, setLoadingMuat] = createSignal(false)
 
     const onPageKegiatan = async () => {
-        setPageKegiatan(pageKegiatan() + 1)
         setLoadingMuat(true)
 
         try {
@@ -38,6 +37,8 @@ export default function DaftarKegiatan() {
         } catch (err) {
             throw new Error(err)
         }
+
+        setPageKegiatan(pageKegiatan() + 1)
     }
 
     const [keg] = createResource(onPageKegiatan)
