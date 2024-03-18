@@ -1,4 +1,3 @@
-import "flowbite"
 import { onMount } from "solid-js"
 
 import SimpleNavbar from "../components/navbar"
