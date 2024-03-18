@@ -1,20 +1,29 @@
-import { onMount, createSignal } from "solid-js"
+import { onMount, createSignal, useContext, Show } from "solid-js"
 
 import LogoUtama from "./navbar/logo"
 import TombolTema from "./navbar/tema"
 import TambahKegiatan from "./navbar/kegiatan"
+import { ContextUtama } from "../stores/utama"
 
 
 export default function SimpleNavbar() {
+    const { state } = useContext(ContextUtama)
     const [toggle, setToggle] = createSignal(false)
+    const [statusAutentikasi, setStatusAutentikasi] = createSignal(false)
 
-    onMount(() => {
+    onMount(async () => {
         const theme = localStorage.getItem("color-theme")
 
         if (theme === "light") {
             setToggle(false)
         } else {
             setToggle(true)
+        }
+
+        const { data } = await state.supa.auth.getSession()
+
+        if (data.session) {
+            setStatusAutentikasi(true)
         }
     })
 
@@ -26,7 +35,9 @@ export default function SimpleNavbar() {
                 </div>
                 <div class="flex items-center">
                     <div class="flex items-center ms-3">
-                        <TambahKegiatan />
+                        <Show when={statusAutentikasi()}>
+                            <TambahKegiatan />
+                        </Show>
                         <TombolTema />
                     </div>
                 </div>
