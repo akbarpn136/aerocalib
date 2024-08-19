@@ -1,7 +1,0 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-.link-active {
-    @apply bg-gray-200 dark:bg-gray-600;
-}
