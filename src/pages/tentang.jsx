@@ -1,4 +1,4 @@
-export default function HalamanUtama() {
+export default function HalamanTentang() {
     return <div>
         Halaman tentang
     </div>
