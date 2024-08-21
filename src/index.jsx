@@ -2,6 +2,6 @@
 import { render } from "solid-js/web"
 
 import "./index.css"
-import Default from "./layouts/default"
+import MainRoutes from "./routes"
 
-render(() => <Default />, document.getElementById("root"));
+render(() => <MainRoutes />, document.getElementById("root"))
