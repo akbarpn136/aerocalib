@@ -1,7 +1,7 @@
 import { A } from "@solidjs/router"
 
 export default function HalamanUtama() {
-    return <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    return <div class="relative overflow-x-auto shadow-sm sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -92,7 +92,7 @@ export default function HalamanUtama() {
                         </A>
                     </td>
                 </tr>
-                <tr>
+                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         Apple Watch 5
                     </th>
@@ -112,5 +112,18 @@ export default function HalamanUtama() {
                 </tr>
             </tbody>
         </table>
+
+        <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between py-4" aria-label="Table navigation">
+            <span />
+            <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                <li>
+                    <a href="#" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                </li>
+
+                <li>
+                    <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 }
