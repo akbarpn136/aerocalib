@@ -114,8 +114,7 @@ export default function HalamanUtama() {
         </table>
 
         <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between py-4" aria-label="Table navigation">
-            <span />
-            <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 me-2">
+            <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 ms-5">
                 <li>
                     <a href="#" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                         <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
