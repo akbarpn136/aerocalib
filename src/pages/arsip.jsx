@@ -1,5 +1,5 @@
 export default function HalamanArsip() {
     return <div>
-        Halaman arsip
+        Arsip kegiatan masih kosong
     </div>
 }
