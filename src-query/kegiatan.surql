@@ -2,7 +2,7 @@ OPTION IMPORT;
 BEGIN TRANSACTION;
 
 -- Create schemaless user table.
-DEFINE TABLE kegiatan SCHEMALESS;
+DEFINE TABLE IF NOT EXISTS kegiatan SCHEMALESS;
 
 -- Define some fields.
 DEFINE FIELD arsip ON TABLE kegiatan TYPE bool;
