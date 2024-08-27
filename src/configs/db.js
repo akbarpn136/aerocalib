@@ -21,8 +21,6 @@ export const initDb = async () => {
 
         return db
     } catch (err) {
-        console.error("Terjadi kesalahan koneksi ke database:", err)
-
         throw err
     }
 }
