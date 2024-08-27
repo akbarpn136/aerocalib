@@ -1,13 +1,22 @@
 import "flowbite"
-import { onCleanup, onMount } from "solid-js"
+import { onCleanup, onMount, ErrorBoundary, createSignal, Show } from "solid-js"
 
 import { initDb, closeDb } from "../configs/db"
 import Navbar from "../components/navbar"
 import Sidebar from "../components/sidebar"
+import ToastSalah from "../components/toast/salah"
 
 export default function Default(props) {
+    const [salah, setSalah] = createSignal(false)
+    const [pesan, setPesan] = createSignal("")
+
     onMount(async () => {
-        await initDb()
+        try {
+            await initDb()
+        } catch (err) {
+            setPesan(err.message)
+            setSalah(true)
+        }
     })
 
     onCleanup(async () => {
@@ -20,7 +29,13 @@ export default function Default(props) {
         <Sidebar />
 
         <div class="p-4 sm:ml-64">
-            {props.children}
+            <Show when={salah()}>
+                <ToastSalah pesan={pesan()} />
+            </Show>
+
+            <ErrorBoundary fallback={(err) => <ToastSalah pesan={err.message} />}>
+                {props.children}
+            </ErrorBoundary>
         </div>
     </div>
 }
