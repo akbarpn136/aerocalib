@@ -31,8 +31,6 @@ export const closeDb = async () => {
     if (!db) return
 
     await db.close()
-
-    db = undefined
 }
 
 export const surreal = () => {
