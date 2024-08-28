@@ -24,13 +24,3 @@ export const initDb = async () => {
         throw err
     }
 }
-
-export const closeDb = async () => {
-    if (!db) return
-
-    await db.close()
-}
-
-export const surreal = () => {
-    return db
-}
