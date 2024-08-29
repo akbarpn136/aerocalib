@@ -1,11 +1,13 @@
 import { A } from "@solidjs/router"
-import { For, createEffect, createSignal, useContext } from "solid-js"
+import { For, Show, createEffect, createSignal, useContext } from "solid-js"
 
 import { AppContext } from "../stores"
 import { produce } from "solid-js/store"
 
 export default function HalamanUtama() {
     const [page, setPage] = createSignal(1)
+    const [selanjutnya, setSelanjutnya] = createSignal(true)
+    const [sebelumnya, setSebelumnya] = createSignal(true)
 
     const { state, setState } = useContext(AppContext)
 
@@ -30,7 +32,7 @@ export default function HalamanUtama() {
             try {
                 const result = await db.query(
                     "SELECT id, peralatan, instansi, dibuat FROM kegiatan WHERE arsip = false ORDER BY dibuat LIMIT $limit START ($page - 1) * $limit;",
-                    {page: page(), limit}
+                    { page: page(), limit }
                 )
 
                 setState("kegiatan", [])  // reset empty dulu array
@@ -41,6 +43,18 @@ export default function HalamanUtama() {
                 }))
             } catch (err) {
                 throw err
+            }
+
+            if (state.kegiatan.length < limit) {
+                setSelanjutnya(false)
+            } else {
+                setSelanjutnya(true)
+            }
+
+            if (page() == 1) {
+                setSebelumnya(false)
+            } else {
+                setSebelumnya(true)
             }
         }
     })
@@ -98,29 +112,41 @@ export default function HalamanUtama() {
 
         <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between py-4" aria-label="Table navigation">
             <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 ms-5">
-                <li>
-                    <button
-                        type="button"
-                        class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                        onClick={prevPage}
-                    >
-                        <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7" />
-                        </svg>
-                    </button>
-                </li>
+                <Show when={sebelumnya()}>
+                    <li>
+                        <button
+                            type="button"
+                            class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                            classList={{
+                                "rounded-s-lg": state.kegiatan.length == Number(import.meta.env.VITE_LIMIT_KEGIATAN),
+                                "rounded-lg": state.kegiatan.length < Number(import.meta.env.VITE_LIMIT_KEGIATAN)
+                            }}
+                            onClick={prevPage}
+                        >
+                            <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7" />
+                            </svg>
+                        </button>
+                    </li>
+                </Show>
 
-                <li>
-                    <button
-                        type="button"
-                        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                        onClick={nextPage}
-                    >
-                        <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
-                        </svg>
-                    </button>
-                </li>
+                <Show when={selanjutnya()}>
+                    <li>
+                        <button
+                            type="button"
+                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                            classList={{
+                                "rounded-e-lg": page() > 1,
+                                "rounded-lg": page() == 1
+                            }}
+                            onClick={nextPage}
+                        >
+                            <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
+                            </svg>
+                        </button>
+                    </li>
+                </Show>
             </ul>
         </nav>
     </div>
