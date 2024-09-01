@@ -16,5 +16,6 @@ DEFINE INDEX unique_peralatan ON TABLE kegiatan COLUMNS peralatan UNIQUE;
 -- Define index for search
 DEFINE ANALYZER cari_peralatan_analyzer TOKENIZERS blank, class, camel, punct FILTERS lowercase;
 DEFINE INDEX cari_peralatan ON kegiatan FIELDS peralatan SEARCH ANALYZER cari_peralatan_analyzer BM25;
+DEFINE INDEX cari_instansi ON kegiatan FIELDS instansi SEARCH ANALYZER cari_peralatan_analyzer BM25;
 
 COMMIT TRANSACTION;
