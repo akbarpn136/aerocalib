@@ -6,6 +6,7 @@ import { produce } from "solid-js/store"
 
 export default function HalamanUtama() {
     const [page, setPage] = createSignal(1)
+    const [cari, setCari] = createSignal(null)
     const [kosong, setKosong] = createSignal(true)
     const [sebelumnya, setSebelumnya] = createSignal(true)
     const [selanjutnya, setSelanjutnya] = createSignal(true)
@@ -24,6 +25,30 @@ export default function HalamanUtama() {
         }
     }
 
+    const onCariPeralatan = async (e) => {
+        const db = state.surreal
+        const cari = e.currentTarget.value
+        const limit = Number(import.meta.env.VITE_LIMIT_KEGIATAN)
+
+        if (e.keyCode == 13) {
+            try {
+                const result = await db.query(
+                    "SELECT id, peralatan, instansi, dibuat, search::score(1) AS score_peralatan, search::score(2) AS score_instansi FROM kegiatan WHERE peralatan @1@ $cari OR instansi @2@ $cari ORDER BY dibuat DESC LIMIT $limit START ($page - 1) * $limit;",
+                    { page: page(), limit, cari }
+                )
+    
+                setState("kegiatan", [])  // reset empty dulu array
+                setState("kegiatan", produce((keg) => {
+                    result[0].forEach(el => {
+                        keg.push(el)
+                    })
+                }))
+            } catch (err) {
+                throw err
+            }
+        }
+    }
+
     createEffect(async () => {
         const db = state.surreal
 
@@ -32,7 +57,7 @@ export default function HalamanUtama() {
 
             try {
                 const result = await db.query(
-                    "SELECT id, peralatan, instansi, dibuat FROM kegiatan WHERE arsip = false ORDER BY dibuat LIMIT $limit START ($page - 1) * $limit;",
+                    "SELECT id, peralatan, instansi, dibuat FROM kegiatan WHERE arsip = false ORDER BY dibuat DESC LIMIT $limit START ($page - 1) * $limit;",
                     { page: page(), limit }
                 )
 
@@ -156,6 +181,7 @@ export default function HalamanUtama() {
                             type="text"
                             class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Temukan kegiatan..."
+                            onKeyUp={onCariPeralatan}
                         />
                     </div>
                 </div>
