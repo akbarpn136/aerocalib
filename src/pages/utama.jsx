@@ -112,7 +112,73 @@ export default function HalamanUtama() {
         }
     })
 
-    return <div class="relative overflow-x-auto shadow-sm sm:rounded-lg">
+    return <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-2 pb-4" aria-label="Table navigation">
+            <Show when={kosong()}>
+                <span class="ms-2 text-sm text-gray-500 dark:text-gray-300">Kegiatan tidak ada.</span>
+            </Show>
+
+            <Show when={state.kegiatan.length > 0}>
+                <div class="mx-2 bg-white dark:bg-gray-900">
+                    <label for="table-search" class="sr-only">Temukan kegiatan...</label>
+                    <div class="relative mt-1">
+                        <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                            </svg>
+                        </div>
+                        <input
+                            type="text"
+                            class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Temukan kegiatan..."
+                            value={kata()}
+                            onKeyUp={onCariPeralatan}
+                        />
+                    </div>
+                </div>
+            </Show>
+
+            <Show when={!kosong()}>
+                <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 me-2">
+                    <Show when={sebelumnya()}>
+                        <li>
+                            <button
+                                type="button"
+                                class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                classList={{
+                                    "rounded-s-lg": state.kegiatan.length == limit,
+                                    "rounded-lg": state.kegiatan.length < limit
+                                }}
+                                onClick={prevPage}
+                            >
+                                <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7" />
+                                </svg>
+                            </button>
+                        </li>
+                    </Show>
+
+                    <Show when={selanjutnya()}>
+                        <li>
+                            <button
+                                type="button"
+                                class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                classList={{
+                                    "rounded-e-lg": page() > 1,
+                                    "rounded-lg": page() == 1
+                                }}
+                                onClick={nextPage}
+                            >
+                                <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
+                                </svg>
+                            </button>
+                        </li>
+                    </Show>
+                </ul>
+            </Show>
+        </nav>
+
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -183,71 +249,5 @@ export default function HalamanUtama() {
                 </Switch>
             </tbody>
         </table>
-
-        <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between py-4" aria-label="Table navigation">
-            <Show when={kosong()}>
-                <span class="ms-5 text-sm text-gray-500 dark:text-gray-300">Kegiatan tidak ada.</span>
-            </Show>
-
-            <Show when={state.kegiatan.length > 0}>
-                <div class="mx-5 bg-white dark:bg-gray-900">
-                    <label for="table-search" class="sr-only">Temukan kegiatan...</label>
-                    <div class="relative mt-1">
-                        <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                            </svg>
-                        </div>
-                        <input
-                            type="text"
-                            class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Temukan kegiatan..."
-                            value={kata()}
-                            onKeyUp={onCariPeralatan}
-                        />
-                    </div>
-                </div>
-            </Show>
-
-            <Show when={!kosong()}>
-                <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 me-5">
-                    <Show when={sebelumnya()}>
-                        <li>
-                            <button
-                                type="button"
-                                class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                classList={{
-                                    "rounded-s-lg": state.kegiatan.length == limit,
-                                    "rounded-lg": state.kegiatan.length < limit
-                                }}
-                                onClick={prevPage}
-                            >
-                                <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7" />
-                                </svg>
-                            </button>
-                        </li>
-                    </Show>
-
-                    <Show when={selanjutnya()}>
-                        <li>
-                            <button
-                                type="button"
-                                class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                classList={{
-                                    "rounded-e-lg": page() > 1,
-                                    "rounded-lg": page() == 1
-                                }}
-                                onClick={nextPage}
-                            >
-                                <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
-                                </svg>
-                            </button>
-                        </li>
-                    </Show>
-                </ul>
-            </Show>
-        </nav>
     </div>
 }
