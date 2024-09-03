@@ -14,7 +14,6 @@ export default function HalamanUtama() {
     const [selanjutnya, setSelanjutnya] = createSignal(true)
 
     const [kata, setKata] = createSignal("")
-    const [pageCari, setPageCari] = createSignal(1)
     const [statusCari, setStatusCari] = createSignal(false)
     const [sebelumnyaCari, setSebelumnyaCari] = createSignal(true)
     const [selanjutnyaCari, setSelanjutnyaCari] = createSignal(true)
@@ -34,54 +33,57 @@ export default function HalamanUtama() {
     }
 
     const nextPageCari = async () => {
-        setPageCari(pageCari() + 1)
+        setPage(page() + 1)
 
-        await queryCari(kata(), pageCari(), limit)
+        await onFilterKegiatan(state.surreal, page(), limit, kata())
+
+        if (state.kegiatan.length < limit) {
+            setSelanjutnyaCari(false)
+        } else {
+            setSelanjutnyaCari(true)
+        }
     }
 
     const prevPageCari = async () => {
-        if (pageCari() > 1) {
-            setPageCari(pageCari() - 1)
+        if (page() > 1) {
+            setPage(page() - 1)
         } else {
-            setPageCari(1)
+            setPage(1)
         }
 
-        await queryCari(kata(), pageCari(), limit)
-    }
+        await onFilterKegiatan(state.surreal, page(), limit, kata())
 
-    const onFilterKegiatan = async (db, page, limit) => {
-        try {
-            const hasil = await filterKegiatan(
-                db,
-                page,
-                limit
-            )
-
-            setState("kegiatan", [])  // reset empty dulu array
-            setState("kegiatan", produce((keg) => {
-                hasil.forEach(el => {
-                    keg.push(el)
-                })
-            }))
-        } catch (err) {
-            throw err
+        if (state.kegiatan.length < limit) {
+            setSelanjutnyaCari(false)
+        } else {
+            setSelanjutnyaCari(true)
         }
     }
 
-    const queryCari = async (cari, page, limit) => {
-        try {
-            const pencarian = await cariKegiatan(
-                state.surreal,
-                page,
-                limit,
-                cari
-            )
+    const onFilterKegiatan = async (db, page, limit, cari="") => {
+        let hasil
 
-            if (pencarian.length > 0) {
+        try {
+            if (statusCari()) {
+                hasil = await cariKegiatan(
+                    state.surreal,
+                    page,
+                    limit,
+                    cari
+                )
+            } else {
+                hasil = await filterKegiatan(
+                    db,
+                    page,
+                    limit
+                )
+            }
+
+            if (hasil.length > 0) {
                 setKosong(false)
                 setState("kegiatan", [])  // reset empty dulu array
                 setState("kegiatan", produce((keg) => {
-                    pencarian.forEach(el => {
+                    hasil.forEach(el => {
                         keg.push(el)
                     })
                 }))
@@ -98,24 +100,22 @@ export default function HalamanUtama() {
 
         if (e.keyCode == 13) {
             setPage(1)
-            setPageCari(1)
 
             if (kata() == "") {
                 setStatusCari(false)
-
-                try {
-                    await onFilterKegiatan(
-                        state.surreal,
-                        page(),
-                        limit
-                    )
-                } catch (err) {
-                    throw err
-                }
             } else {
                 setStatusCari(true)
+            }
 
-                await queryCari(kata(), pageCari(), limit)
+            try {
+                await onFilterKegiatan(
+                    state.surreal,
+                    page(),
+                    limit,
+                    kata()
+                )
+            } catch (err) {
+                throw err
             }
         }
     }
@@ -136,24 +136,17 @@ export default function HalamanUtama() {
                 setKosong(false)
             }
 
-            console.log(state.kegiatan.length)
             if (state.kegiatan.length < limit) {
                 setSelanjutnya(false)
-                setSelanjutnyaCari(false)
             } else {
                 setSelanjutnya(true)
-                setSelanjutnyaCari(true)
             }
 
             if (page() == 1) {
                 setSebelumnya(false)
-            } else {
-                setSebelumnya(true)
-            }
-
-            if (pageCari() == 1) {
                 setSebelumnyaCari(false)
             } else {
+                setSebelumnya(true)
                 setSebelumnyaCari(true)
             }
         }
@@ -323,8 +316,8 @@ export default function HalamanUtama() {
                                         type="button"
                                         class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                                         classList={{
-                                            "rounded-e-lg": pageCari() > 1,
-                                            "rounded-lg": pageCari() == 1
+                                            "rounded-e-lg": page() > 1,
+                                            "rounded-lg": page() == 1
                                         }}
                                         onClick={nextPageCari}
                                     >
