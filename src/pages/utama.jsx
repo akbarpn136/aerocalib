@@ -9,14 +9,11 @@ export default function HalamanUtama() {
     const limit = Number(import.meta.env.VITE_LIMIT_KEGIATAN)
 
     const [page, setPage] = createSignal(1)
+    const [kata, setKata] = createSignal("")
     const [kosong, setKosong] = createSignal(true)
     const [sebelumnya, setSebelumnya] = createSignal(true)
     const [selanjutnya, setSelanjutnya] = createSignal(true)
 
-    const [kata, setKata] = createSignal("")
-    const [statusCari, setStatusCari] = createSignal(false)
-    const [sebelumnyaCari, setSebelumnyaCari] = createSignal(true)
-    const [selanjutnyaCari, setSelanjutnyaCari] = createSignal(true)
 
     const { state, setState } = useContext(AppContext)
 
@@ -32,39 +29,11 @@ export default function HalamanUtama() {
         }
     }
 
-    const nextPageCari = async () => {
-        setPage(page() + 1)
-
-        await onFilterKegiatan(state.surreal, page(), limit, kata())
-
-        if (state.kegiatan.length < limit) {
-            setSelanjutnyaCari(false)
-        } else {
-            setSelanjutnyaCari(true)
-        }
-    }
-
-    const prevPageCari = async () => {
-        if (page() > 1) {
-            setPage(page() - 1)
-        } else {
-            setPage(1)
-        }
-
-        await onFilterKegiatan(state.surreal, page(), limit, kata())
-
-        if (state.kegiatan.length < limit) {
-            setSelanjutnyaCari(false)
-        } else {
-            setSelanjutnyaCari(true)
-        }
-    }
-
     const onFilterKegiatan = async (db, page, limit, cari="") => {
         let hasil
 
         try {
-            if (statusCari()) {
+            if (cari !== "") {
                 hasil = await cariKegiatan(
                     state.surreal,
                     page,
@@ -96,16 +65,9 @@ export default function HalamanUtama() {
     }
 
     const onCariPeralatan = async (e) => {
-        setKata(e.currentTarget.value)
-
         if (e.keyCode == 13) {
             setPage(1)
-
-            if (kata() == "") {
-                setStatusCari(false)
-            } else {
-                setStatusCari(true)
-            }
+            setKata(e.currentTarget.value)
 
             try {
                 await onFilterKegiatan(
@@ -125,7 +87,7 @@ export default function HalamanUtama() {
 
         if (db !== null) {
             try {
-                await onFilterKegiatan(db, page(), limit)
+                await onFilterKegiatan(db, page(), limit, kata())
             } catch (err) {
                 throw err
             }
@@ -144,10 +106,8 @@ export default function HalamanUtama() {
 
             if (page() == 1) {
                 setSebelumnya(false)
-                setSebelumnyaCari(false)
             } else {
                 setSebelumnya(true)
-                setSebelumnyaCari(true)
             }
         }
     })
@@ -242,6 +202,7 @@ export default function HalamanUtama() {
                             type="text"
                             class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Temukan kegiatan..."
+                            value={kata()}
                             onKeyUp={onCariPeralatan}
                         />
                     </div>
@@ -249,87 +210,43 @@ export default function HalamanUtama() {
             </Show>
 
             <Show when={!kosong()}>
-                <Switch>
-                    <Match when={!statusCari()}>
-                        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 me-5">
-                            <Show when={sebelumnya()}>
-                                <li>
-                                    <button
-                                        type="button"
-                                        class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                        classList={{
-                                            "rounded-s-lg": state.kegiatan.length == limit,
-                                            "rounded-lg": state.kegiatan.length < limit
-                                        }}
-                                        onClick={prevPage}
-                                    >
-                                        <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7" />
-                                        </svg>
-                                    </button>
-                                </li>
-                            </Show>
+                <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 me-5">
+                    <Show when={sebelumnya()}>
+                        <li>
+                            <button
+                                type="button"
+                                class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                classList={{
+                                    "rounded-s-lg": state.kegiatan.length == limit,
+                                    "rounded-lg": state.kegiatan.length < limit
+                                }}
+                                onClick={prevPage}
+                            >
+                                <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7" />
+                                </svg>
+                            </button>
+                        </li>
+                    </Show>
 
-                            <Show when={selanjutnya()}>
-                                <li>
-                                    <button
-                                        type="button"
-                                        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                        classList={{
-                                            "rounded-e-lg": page() > 1,
-                                            "rounded-lg": page() == 1
-                                        }}
-                                        onClick={nextPage}
-                                    >
-                                        <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
-                                        </svg>
-                                    </button>
-                                </li>
-                            </Show>
-                        </ul>
-                    </Match>
-
-                    <Match when={statusCari}>
-                        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 me-5">
-                            <Show when={sebelumnyaCari()}>
-                                <li>
-                                    <button
-                                        type="button"
-                                        class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                        classList={{
-                                            "rounded-s-lg": state.kegiatan.length == limit,
-                                            "rounded-lg": state.kegiatan.length < limit
-                                        }}
-                                        onClick={prevPageCari}
-                                    >
-                                        <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7" />
-                                        </svg>
-                                    </button>
-                                </li>
-                            </Show>
-
-                            <Show when={selanjutnyaCari()}>
-                                <li>
-                                    <button
-                                        type="button"
-                                        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                        classList={{
-                                            "rounded-e-lg": page() > 1,
-                                            "rounded-lg": page() == 1
-                                        }}
-                                        onClick={nextPageCari}
-                                    >
-                                        <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
-                                        </svg>
-                                    </button>
-                                </li>
-                            </Show>
-                        </ul>
-                    </Match>
-                </Switch>
+                    <Show when={selanjutnya()}>
+                        <li>
+                            <button
+                                type="button"
+                                class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                classList={{
+                                    "rounded-e-lg": page() > 1,
+                                    "rounded-lg": page() == 1
+                                }}
+                                onClick={nextPage}
+                            >
+                                <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
+                                </svg>
+                            </button>
+                        </li>
+                    </Show>
+                </ul>
             </Show>
         </nav>
     </div>
