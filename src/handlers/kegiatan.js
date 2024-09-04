@@ -11,11 +11,11 @@ export const cariKegiatan = async (db, page, limit, cari) => {
     }
 }
 
-export const filterKegiatan = async (db, page, limit) => {
+export const filterKegiatan = async (db, page, limit, arsip=false) => {
     try {
         const result = await db.query(
-            "SELECT id, peralatan, instansi, dibuat FROM kegiatan WHERE arsip = false ORDER BY dibuat DESC LIMIT $limit START ($page - 1) * $limit;",
-            { page, limit }
+            "SELECT id, peralatan, instansi, dibuat FROM kegiatan WHERE arsip = $arsip ORDER BY dibuat DESC LIMIT $limit START ($page - 1) * $limit;",
+            { page, limit, arsip }
         )
 
         return result[0]
