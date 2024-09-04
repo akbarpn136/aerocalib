@@ -1,7 +1,6 @@
-import { createSignal, useContext } from "solid-js";
+import { useContext } from "solid-js";
 
 import { AppContext } from "../../stores";
-import { filterKegiatan } from "../../handlers/kegiatan";
 
 export default function Navbar() {
   const { state, setState } = useContext(AppContext);
