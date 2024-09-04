@@ -88,7 +88,13 @@ export default function HalamanUtama() {
 
         if (db !== null) {
             try {
-                await onFilterKegiatan(db, page(), limit, kata())
+                await onFilterKegiatan(
+                    db,
+                    page(),
+                    limit,
+                    kata(),
+                    state.arsipkegiatan
+                )
             } catch (err) {
                 throw err
             }
