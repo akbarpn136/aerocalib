@@ -29,7 +29,7 @@ export default function HalamanUtama() {
         }
     }
 
-    const onFilterKegiatan = async (db, page, limit, cari="") => {
+    const onFilterKegiatan = async (db, page, limit, cari="", arsip=false) => {
         let hasil
 
         try {
@@ -44,7 +44,8 @@ export default function HalamanUtama() {
                 hasil = await filterKegiatan(
                     db,
                     page,
-                    limit
+                    limit,
+                    arsip
                 )
             }
 
