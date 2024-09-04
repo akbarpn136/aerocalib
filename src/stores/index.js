@@ -5,5 +5,6 @@ export const AppContext = createContext()
 
 export const [state, setState] = createStore({
     surreal: null,
-    kegiatan: []
+    kegiatan: [],
+    arsipkegiatan: false
 })
