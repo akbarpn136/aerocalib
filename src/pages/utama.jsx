@@ -47,7 +47,13 @@ export default function HalamanUtama() {
 
     try {
       if (cari !== "") {
-        hasil = await cariKegiatan(state.surreal, page, limit, cari);
+        hasil = await cariKegiatan(
+          state.surreal,
+          page,
+          limit,
+          cari,
+          state.arsipkegiatan
+        );
       } else {
         hasil = await filterKegiatan(db, page, limit, arsip);
       }
@@ -77,7 +83,13 @@ export default function HalamanUtama() {
       setKata(e.currentTarget.value);
 
       try {
-        await onFilterKegiatan(state.surreal, page(), limit, kata());
+        await onFilterKegiatan(
+          state.surreal,
+          page(),
+          limit,
+          kata(),
+          state.arsipkegiatan
+        );
       } catch (err) {
         throw err;
       }
@@ -88,6 +100,10 @@ export default function HalamanUtama() {
     const db = state.surreal;
 
     if (db !== null) {
+      if (state.arsipkegiatan) {
+        setPage(1);
+      }
+
       try {
         await onFilterKegiatan(db, page(), limit, kata(), state.arsipkegiatan);
       } catch (err) {
