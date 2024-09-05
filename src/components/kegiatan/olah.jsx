@@ -43,7 +43,13 @@ export default function OlahKegiatan({ setmodal }) {
           instansi: instansi(),
         });
 
-        console.log(result);
+        setState(
+          "kegiatan",
+          produce((kegiatans) => {
+            kegiatans.pop();
+            kegiatans.unshift(result[0]);
+          })
+        );
       } catch (err) {
         setState(
           "keliru",
