@@ -70,6 +70,7 @@ export default function HalamanUtama() {
           })
         );
       } else {
+        setState("kegiatan", []);
         setKosong(true);
       }
     } catch (err) {
@@ -138,7 +139,7 @@ export default function HalamanUtama() {
       >
         <Show when={kosong()}>
           <span class="ms-2 text-sm text-gray-500 dark:text-gray-300">
-            Kegiatan tidak ada.
+            Informasi tidak ada.
           </span>
         </Show>
 
