@@ -1,7 +1,11 @@
 import "flowbite";
-import { Show, createSignal } from "solid-js";
+import { Show, createSignal, useContext } from "solid-js";
 
-export default function ToastSalah({ pesan }) {
+import { AppContext } from "../../stores";
+
+export default function ToastSalah() {
+  const { state, _ } = useContext(AppContext);
+
   const [muncul, setMuncul] = createSignal(true);
   const [sembunyi, setSembunyi] = createSignal(false);
   const [transisi, setTransisi] = createSignal(false);
@@ -18,7 +22,7 @@ export default function ToastSalah({ pesan }) {
   return (
     <Show when={muncul()}>
       <div
-        class="fixed bottom-5 right-5 flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+        class="fixed bottom-5 right-5 z-20 flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
         classList={{
           hidden: sembunyi(),
           "transition-opacity duration-500 ease-out opacity-0": transisi(),
@@ -38,7 +42,7 @@ export default function ToastSalah({ pesan }) {
           <span class="sr-only">Warning icon</span>
         </div>
 
-        <div class="ms-3 text-sm font-normal">{pesan}</div>
+        <div class="ms-3 text-sm font-normal">{state.keliru.pesan}</div>
 
         <button
           type="button"
