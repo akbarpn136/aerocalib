@@ -1,12 +1,18 @@
-import { useContext } from "solid-js";
+import { createSignal, Show, useContext } from "solid-js";
 
 import { AppContext } from "../../stores";
+import OlahKegiatan from "../kegiatan/olah";
 
 export default function Navbar() {
   const { state, setState } = useContext(AppContext);
+  const [showModal, setShowModal] = createSignal(false);
 
   const onClickArsip = () => {
     setState("arsipkegiatan", !state.arsipkegiatan);
+  };
+
+  const onShowModal = () => {
+    setShowModal(true);
   };
 
   return (
@@ -42,6 +48,7 @@ export default function Navbar() {
             data-tooltip-target="tooltip-tambah-kegiatan"
             type="button"
             class="inline-flex items-center px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-2 focus:ring-gray-700 focus:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-500 dark:focus:text-white"
+            onClick={onShowModal}
           >
             <svg
               class="w-5 h-5 text-gray-500 dark:text-gray-400"
@@ -103,6 +110,11 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      <Show when={showModal()}>
+        <OlahKegiatan setmodal={setShowModal} />
+        <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40" />
+      </Show>
     </div>
   );
 }
