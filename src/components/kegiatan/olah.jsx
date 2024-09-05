@@ -1,6 +1,12 @@
 import { createSignal, Show } from "solid-js";
+import { useContext } from "solid-js";
+
+import { AppContext } from "../../stores";
+import { buatKegiatan } from "../../handlers/kegiatan";
 
 export default function OlahKegiatan({ setmodal }) {
+  const { state, setState } = useContext(AppContext);
+
   const [peralatan, setPeralatan] = createSignal("");
   const [peralatanError, setPeralatanError] = createSignal(false);
 
@@ -11,7 +17,9 @@ export default function OlahKegiatan({ setmodal }) {
     setmodal(false);
   };
 
-  const onFormSubmit = (e) => {
+  const onFormSubmit = async (e) => {
+    const db = state.surreal;
+
     e.preventDefault();
 
     if (peralatan() == "") {
@@ -24,6 +32,17 @@ export default function OlahKegiatan({ setmodal }) {
       setInstansiError(true);
     } else {
       setInstansiError(false);
+    }
+
+    setmodal(false);
+
+    try {
+      await buatKegiatan(db, {
+        peralatan: peralatan(),
+        instansi: instansi(),
+      });
+    } catch (err) {
+      throw err;
     }
   };
 
