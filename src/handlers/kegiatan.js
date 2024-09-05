@@ -5,7 +5,7 @@ export const buatKegiatan = async (db, {peralatan, instansi}) => {
             { peralatan, instansi }
         )
 
-        return result
+        return result[0]
     } catch (err) {
         throw err
     }
