@@ -4,7 +4,11 @@ import { createStore } from "solid-js/store"
 export const AppContext = createContext()
 
 export const [state, setState] = createStore({
-    surreal: null,
     kegiatan: [],
+    surreal: null,
+    keliru: {
+        benarkah: false,
+        pesan: ""
+    },
     arsipkegiatan: false
 })
