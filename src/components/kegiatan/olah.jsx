@@ -3,6 +3,8 @@ import { useContext } from "solid-js";
 
 import { AppContext } from "../../stores";
 import { buatKegiatan } from "../../handlers/kegiatan";
+import ToastSalah from "../toast/salah";
+import { produce } from "solid-js/store";
 
 export default function OlahKegiatan({ setmodal }) {
   const { state, setState } = useContext(AppContext);
@@ -34,15 +36,27 @@ export default function OlahKegiatan({ setmodal }) {
       setInstansiError(false);
     }
 
-    setmodal(false);
+    if (!instansiError() && !peralatanError()) {
+      try {
+        const result = await buatKegiatan(db, {
+          peralatan: peralatan(),
+          instansi: instansi(),
+        });
 
-    try {
-      await buatKegiatan(db, {
-        peralatan: peralatan(),
-        instansi: instansi(),
-      });
-    } catch (err) {
-      throw err;
+        console.log(result);
+      } catch (err) {
+        setState(
+          "keliru",
+          produce((payload) => {
+            payload.benarkah = true;
+            payload.pesan = err.message;
+          })
+        );
+      }
+
+      setmodal(false);
+      setInstansiError(false);
+      setPeralatanError(false);
     }
   };
 
