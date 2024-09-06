@@ -1,5 +1,7 @@
+import { useParams } from "@solidjs/router";
+
 export default function HalamanRincian() {
-    return <div>
-        Halaman rincian kegiatan
-    </div>
+  const params = useParams();
+
+  return <div>Halaman rincian kegiatan {params.id}</div>;
 }
