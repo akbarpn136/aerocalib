@@ -36,3 +36,13 @@ export const cariKegiatan = async (db, page, limit, cari, arsip=false) => {
         throw err
     }
 }
+
+export const filterKegiatanId = async (db, id) => {
+    try {
+        const result = await db.query("SELECT * FROM kegiatan WHERE id = $id;", { id })
+
+        return result[0]
+    } catch (err) {
+        throw err
+    }
+}
