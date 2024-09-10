@@ -1,5 +1,12 @@
-import { createSignal, Show, useContext } from "solid-js";
+import {
+  createMemo,
+  createSignal,
+  Show,
+  useContext,
+  createEffect,
+} from "solid-js";
 import { Archive, Menu, Plus } from "lucide-solid";
+import { useLocation } from "@solidjs/router";
 
 import { AppContext } from "../../stores";
 import OlahKegiatan from "../kegiatan/olah";
@@ -8,6 +15,8 @@ export default function Navbar() {
   const { state, setState } = useContext(AppContext);
   const [showModal, setShowModal] = createSignal(false);
 
+  const location = useLocation();
+
   const onClickArsip = () => {
     setState("arsipkegiatan", !state.arsipkegiatan);
   };
@@ -15,6 +24,13 @@ export default function Navbar() {
   const onShowModal = () => {
     setShowModal(true);
   };
+
+  createEffect(() => {
+    const pathname = location.pathname;
+
+    console.log(pathname);
+    console.log(pathname.includes("/rincian"));
+  });
 
   return (
     <div class="mt-2">
