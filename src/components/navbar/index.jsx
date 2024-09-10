@@ -1,4 +1,5 @@
 import { createSignal, Show, useContext } from "solid-js";
+import { Archive, Menu, Plus } from "lucide-solid";
 
 import { AppContext } from "../../stores";
 import OlahKegiatan from "../kegiatan/olah";
@@ -26,20 +27,7 @@ export default function Navbar() {
       >
         <span class="sr-only">Open sidebar</span>
 
-        <svg
-          class="w-5 h-5 text-gray-500 dark:text-white"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-width="2"
-            d="M5 7h14M5 12h14M5 17h14"
-          />
-        </svg>
+        <Menu size={19} />
       </button>
 
       <div class="inline-flex mx-2 sm:ml-64 sm:px-4">
@@ -50,23 +38,7 @@ export default function Navbar() {
             class="inline-flex items-center px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-2 focus:ring-gray-700 focus:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-500 dark:focus:text-white"
             onClick={onShowModal}
           >
-            <svg
-              class="w-5 h-5 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 12h14m-7 7V5"
-              />
-            </svg>
+            <Plus size={19} />
           </button>
           <div
             id="tooltip-tambah-kegiatan"
@@ -83,22 +55,7 @@ export default function Navbar() {
             class="inline-flex items-center px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-2 focus:ring-gray-700 focus:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-500 dark:focus:text-white"
             onClick={onClickArsip}
           >
-            <svg
-              class="w-5 h-5 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 12v1h4v-1m4 7H6a1 1 0 0 1-1-1V9h14v9a1 1 0 0 1-1 1ZM4 5h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"
-              />
-            </svg>
+            <Archive size={19} />
           </button>
           <div
             id="tooltip-muat-kegiatan"

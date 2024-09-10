@@ -2,7 +2,7 @@ import { createSignal, Show } from "solid-js";
 import { useContext } from "solid-js";
 
 import { AppContext } from "../../stores";
-import { buatKegiatan } from "../../handlers/kegiatan";
+import { buatKegiatan } from "../../lib/handlers/kegiatan";
 import ToastSalah from "../toast/salah";
 import { produce } from "solid-js/store";
 

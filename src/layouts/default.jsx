@@ -1,7 +1,7 @@
 import "flowbite";
 import { Show, onMount, useContext } from "solid-js";
 
-import { initDb } from "../configs/db";
+import { initDb } from "../lib/configs/db";
 import { AppContext } from "../stores";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
