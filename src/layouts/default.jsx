@@ -1,4 +1,3 @@
-import "flowbite";
 import { Show, onMount, useContext } from "solid-js";
 
 import { initDb } from "../lib/configs/db";
@@ -33,7 +32,7 @@ export default function Default(props) {
 
       <Sidebar />
 
-      <div class="p-4 sm:ml-64">
+      <div class="p-4 sm:ml-16">
         <Show when={state.keliru.benarkah}>
           <ToastSalah />
         </Show>

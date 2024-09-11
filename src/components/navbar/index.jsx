@@ -1,4 +1,3 @@
-import "flowbite";
 import {
   Show,
   Match,
@@ -46,7 +45,7 @@ export default function Navbar() {
         <Menu size={19} />
       </button>
 
-      <div class="inline-flex mx-2 sm:ml-64 sm:px-4">
+      <div class="inline-flex mx-2 sm:ml-16 sm:px-4">
         <div class="inline-flex items-center rounded-md shadow-sm" role="group">
           <Switch>
             <Match when={path() == "/"}>

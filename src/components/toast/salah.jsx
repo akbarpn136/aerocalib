@@ -1,4 +1,3 @@
-import "flowbite";
 import { Show, createSignal, useContext } from "solid-js";
 
 import { AppContext } from "../../stores";
