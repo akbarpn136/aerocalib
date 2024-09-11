@@ -1,11 +1,13 @@
+import "flowbite";
 import {
-  createMemo,
-  createSignal,
   Show,
+  Match,
+  Switch,
   useContext,
+  createSignal,
   createEffect,
 } from "solid-js";
-import { Archive, Menu, Plus } from "lucide-solid";
+import { Archive, Menu, Plus, Pencil, ArchiveX } from "lucide-solid";
 import { useLocation } from "@solidjs/router";
 
 import { AppContext } from "../../stores";
@@ -14,6 +16,7 @@ import OlahKegiatan from "../kegiatan/olah";
 export default function Navbar() {
   const { state, setState } = useContext(AppContext);
   const [showModal, setShowModal] = createSignal(false);
+  const [path, setPath] = createSignal("");
 
   const location = useLocation();
 
@@ -26,10 +29,7 @@ export default function Navbar() {
   };
 
   createEffect(() => {
-    const pathname = location.pathname;
-
-    console.log(pathname);
-    console.log(pathname.includes("/rincian"));
+    setPath(location.pathname);
   });
 
   return (
@@ -48,39 +48,79 @@ export default function Navbar() {
 
       <div class="inline-flex mx-2 sm:ml-64 sm:px-4">
         <div class="inline-flex items-center rounded-md shadow-sm" role="group">
-          <button
-            data-tooltip-target="tooltip-tambah-kegiatan"
-            type="button"
-            class="inline-flex items-center px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-2 focus:ring-gray-700 focus:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-500 dark:focus:text-white"
-            onClick={onShowModal}
-          >
-            <Plus size={19} />
-          </button>
-          <div
-            id="tooltip-tambah-kegiatan"
-            role="tooltip"
-            class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-          >
-            Tambah kegiatan
-            <div class="tooltip-arrow" data-popper-arrow></div>
-          </div>
+          <Switch>
+            <Match when={path() == "/"}>
+              <button
+                data-tooltip-target="tooltip-tambah-kegiatan"
+                type="button"
+                class="inline-flex items-center px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-2 focus:ring-gray-700 focus:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-500 dark:focus:text-white"
+                onClick={onShowModal}
+              >
+                <Plus size={19} />
+              </button>
+              <div
+                id="tooltip-tambah-kegiatan"
+                role="tooltip"
+                class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
+                Tambah kegiatan
+                <div class="tooltip-arrow" data-popper-arrow></div>
+              </div>
 
-          <button
-            data-tooltip-target="tooltip-muat-kegiatan"
-            type="button"
-            class="inline-flex items-center px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-2 focus:ring-gray-700 focus:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-500 dark:focus:text-white"
-            onClick={onClickArsip}
-          >
-            <Archive size={19} />
-          </button>
-          <div
-            id="tooltip-muat-kegiatan"
-            role="tooltip"
-            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-          >
-            Arsip kegiatan
-            <div class="tooltip-arrow" data-popper-arrow></div>
-          </div>
+              <button
+                data-tooltip-target="tooltip-muat-kegiatan"
+                type="button"
+                class="inline-flex items-center px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-2 focus:ring-gray-700 focus:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-500 dark:focus:text-white"
+                onClick={onClickArsip}
+              >
+                <Archive size={19} />
+              </button>
+              <div
+                id="tooltip-muat-kegiatan"
+                role="tooltip"
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
+                Arsip kegiatan
+                <div class="tooltip-arrow" data-popper-arrow></div>
+              </div>
+            </Match>
+
+            <Match when={path().includes("/rincian")}>
+              <button
+                data-tooltip-target="tooltip-ubah-kegiatan"
+                type="button"
+                class="inline-flex items-center px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-2 focus:ring-gray-700 focus:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-500 dark:focus:text-white"
+                onClick={onShowModal}
+              >
+                <Pencil size={19} />
+              </button>
+              <div
+                id="tooltip-ubah-kegiatan"
+                role="tooltip"
+                class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
+                Ubah kegiatan
+                <div class="tooltip-arrow" data-popper-arrow></div>
+              </div>
+
+              <button
+                data-tooltip-target="tooltip-arsipkan-kegiatan"
+                type="button"
+                class="inline-flex items-center px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-2 focus:ring-gray-700 focus:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-500 dark:focus:text-white"
+                onClick={onClickArsip}
+              >
+                <ArchiveX size={19} />
+              </button>
+              <div
+                id="tooltip-arsipkan-kegiatan"
+                role="tooltip"
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
+                Arsipkan kegiatan
+                <div class="tooltip-arrow" data-popper-arrow></div>
+              </div>
+            </Match>
+          </Switch>
         </div>
       </div>
 
