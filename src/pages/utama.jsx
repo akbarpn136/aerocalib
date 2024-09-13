@@ -163,15 +163,14 @@ export default function HalamanUtama() {
         </Show>
 
         <Show when={!kosong()}>
-          <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 me-2">
+          <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
             <Show when={sebelumnya()}>
               <li>
                 <button
                   type="button"
                   class="btn btn-sm"
                   classList={{
-                    "rounded-s-lg": state.kegiatan.length == limit,
-                    "rounded-lg": state.kegiatan.length < limit,
+                    "rounded-e-none": state.kegiatan.length == limit,
                   }}
                   onClick={prevPage}
                 >
@@ -186,8 +185,7 @@ export default function HalamanUtama() {
                   type="button"
                   class="btn btn-sm"
                   classList={{
-                    "rounded-e-lg": page() > 1,
-                    "rounded-lg": page() == 1,
+                    "rounded-s-none": page() > 1,
                   }}
                   onClick={nextPage}
                 >
