@@ -138,9 +138,9 @@ export default function HalamanUtama() {
   });
 
   return (
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg border">
+    <div class="card card-compact bg-base-100 shadow-sm border">
       <nav
-        class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-2 pb-4"
+        class="flex items-center flex-column flex-wrap md:flex-row justify-between p-2"
         aria-label="Table navigation"
       >
         <Show when={kosong()}>
@@ -150,23 +150,16 @@ export default function HalamanUtama() {
         </Show>
 
         <Show when={state.kegiatan.length > 0}>
-          <div class="mx-2 bg-white dark:bg-gray-900">
-            <label for="table-search" class="sr-only">
-              Temukan kegiatan...
-            </label>
-            <div class="relative mt-1">
-              <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                <Search size={19} />
-              </div>
-              <input
-                type="text"
-                class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Temukan kegiatan..."
-                value={kata()}
-                onKeyUp={onCariPeralatan}
-              />
-            </div>
-          </div>
+          <label class="input input-bordered input-sm flex items-center gap-2">
+            <input
+              type="text"
+              class="grow"
+              placeholder="Cari kegiatan..."
+              value={kata()}
+              onKeyUp={onCariPeralatan}
+            />
+            <Search size={19} />
+          </label>
         </Show>
 
         <Show when={!kosong()}>
@@ -175,7 +168,7 @@ export default function HalamanUtama() {
               <li>
                 <button
                   type="button"
-                  class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  class="btn btn-sm"
                   classList={{
                     "rounded-s-lg": state.kegiatan.length == limit,
                     "rounded-lg": state.kegiatan.length < limit,
@@ -191,7 +184,7 @@ export default function HalamanUtama() {
               <li>
                 <button
                   type="button"
-                  class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  class="btn btn-sm"
                   classList={{
                     "rounded-e-lg": page() > 1,
                     "rounded-lg": page() == 1,
@@ -206,77 +199,61 @@ export default function HalamanUtama() {
         </Show>
       </nav>
 
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" class="px-6 py-3">
-              Peralatan
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Instansi
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Dibuat
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Opsi
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <Switch>
-            <Match when={!kosong()}>
-              <For each={state.kegiatan}>
-                {(item, index) => {
-                  return (
-                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                      <th
-                        scope="row"
-                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      >
-                        {item.peralatan}
-                      </th>
-                      <td class="px-6 py-4">{item.instansi}</td>
-                      <td class="px-6 py-4">
-                        {item.dibuat.toLocaleString("id-id", {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </td>
-                      <td class="px-6 py-4">
-                        <A
-                          href={`${item.id.id}/rincian`}
-                          class="flex items-center justify-center w-9 h-9 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg toggle-tablet-view hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-500 dark:bg-gray-800 focus:outline-none dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                        >
-                          <EllipsisVertical size={19} />
-                        </A>
-                      </td>
-                    </tr>
-                  );
-                }}
-              </For>
-            </Match>
+      <div class="overflow-x-auto">
+        <table class="table table-zebra">
+          <thead>
+            <tr>
+              <th scope="col">Peralatan</th>
+              <th scope="col">Instansi</th>
+              <th scope="col">Dibuat</th>
+              <th scope="col">Opsi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <Switch>
+              <Match when={!kosong()}>
+                <For each={state.kegiatan}>
+                  {(item, index) => {
+                    return (
+                      <tr>
+                        <th scope="row">{item.peralatan}</th>
+                        <td>{item.instansi}</td>
+                        <td>
+                          {item.dibuat.toLocaleString("id-id", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </td>
+                        <td>
+                          <A
+                            href={`${item.id.id}/rincian`}
+                            class="btn btn-ghost btn-sm"
+                          >
+                            <EllipsisVertical size={19} />
+                          </A>
+                        </td>
+                      </tr>
+                    );
+                  }}
+                </For>
+              </Match>
 
-            <Match when={kosong()}>
-              <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  -
-                </th>
-                <td class="px-6 py-4">-</td>
-                <td class="px-6 py-4">-</td>
-                <td class="px-6 py-4">-</td>
-              </tr>
-            </Match>
-          </Switch>
-        </tbody>
-      </table>
+              <Match when={kosong()}>
+                <tr>
+                  <th scope="row">-</th>
+                  <td class="px-6 py-4">-</td>
+                  <td class="px-6 py-4">-</td>
+                  <td class="px-6 py-4">-</td>
+                </tr>
+              </Match>
+            </Switch>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
