@@ -4,7 +4,7 @@ import { MonitorCog, Info } from "lucide-solid";
 
 export default function Sidebar() {
   return (
-    <aside class="z-50 fixed top-0 left-0 h-screen" aria-label="Sidebar">
+    <aside class="z-10 fixed top-0 left-0 h-screen" aria-label="Sidebar">
       <ul class="menu bg-base-300 h-full rounded-none space-y-1 font-medium">
         <li>
           <A
