@@ -37,13 +37,21 @@ export default function Navbar() {
         <Switch>
           <Match when={path() == "/"}>
             <div class="tooltip tooltip-right" data-tip="Tambah kegiatan">
-              <button type="button" class="btn btn-sm" onClick={onShowModal}>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                onClick={onShowModal}
+              >
                 <Plus size={19} />
               </button>
             </div>
 
             <div class="tooltip tooltip-right" data-tip="Arsip kegiatan">
-              <button type="button" class="btn btn-sm" onClick={onClickArsip}>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                onClick={onClickArsip}
+              >
                 <Archive size={19} />
               </button>
             </div>
@@ -51,13 +59,21 @@ export default function Navbar() {
 
           <Match when={path().includes("/rincian")}>
             <div class="tooltip tooltip-right" data-tip="Ubah kegiatan">
-              <button type="button" class="btn btn-sm" onClick={onShowModal}>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                onClick={onShowModal}
+              >
                 <Pencil size={19} />
               </button>
             </div>
 
             <div class="tooltip tooltip-right" data-tip="Arsipkan kegiatan">
-              <button type="button" class="btn btn-sm" onClick={onShowModal}>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                onClick={onShowModal}
+              >
                 <ArchiveX size={19} />
               </button>
             </div>
