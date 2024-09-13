@@ -50,6 +50,7 @@ export default function HalamanUtama() {
     arsip = false
   ) => {
     let hasil;
+    let hasil_next;
 
     try {
       if (cari !== "") {
@@ -60,8 +61,24 @@ export default function HalamanUtama() {
           cari,
           state.arsipkegiatan
         );
+
+        hasil_next = await cariKegiatan(
+          state.surreal,
+          page + 1,
+          limit,
+          cari,
+          state.arsipkegiatan
+        );
       } else {
         hasil = await filterKegiatan(db, page, limit, arsip);
+
+        hasil_next = await filterKegiatan(db, page + 1, limit, arsip);
+      }
+
+      if (hasil_next.length == 0) {
+        setSelanjutnya(false);
+      } else {
+        setSelanjutnya(true);
       }
 
       if (hasil.length > 0) {
@@ -121,12 +138,6 @@ export default function HalamanUtama() {
         setKosong(true);
       } else {
         setKosong(false);
-      }
-
-      if (state.kegiatan.length < limit) {
-        setSelanjutnya(false);
-      } else {
-        setSelanjutnya(true);
       }
 
       if (page() == 1) {
