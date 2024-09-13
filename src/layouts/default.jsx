@@ -32,7 +32,7 @@ export default function Default(props) {
 
       <Sidebar />
 
-      <div class="p-4 sm:ml-16">
+      <div class="ml-16 p-4">
         <Show when={state.keliru.benarkah}>
           <ToastSalah />
         </Show>
