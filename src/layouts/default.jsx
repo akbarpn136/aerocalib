@@ -1,30 +1,23 @@
-import { Show, onMount, useContext } from "solid-js";
+import { Match, Switch, Suspense, useContext, createResource } from "solid-js";
 
-import { initDb } from "../lib/configs/db";
 import { AppContext } from "../stores";
 import Navbar from "../components/navbar";
+import { initDb } from "../lib/configs/db";
 import Sidebar from "../components/sidebar";
 import ToastSalah from "../components/toast/salah";
-import { produce } from "solid-js/store";
 
 export default function Default(props) {
-  const { state, setState } = useContext(AppContext);
+  const { _, setState } = useContext(AppContext);
 
-  onMount(async () => {
-    try {
-      const conn = await initDb();
+  const connDb = async () => {
+    const conn = await initDb();
 
-      setState("surreal", conn);
-    } catch (err) {
-      setState(
-        "keliru",
-        produce((payload) => {
-          payload.benarkah = true;
-          payload.pesan = err.message;
-        })
-      );
-    }
-  });
+    setState("surreal", conn);
+
+    return conn;
+  };
+
+  const [db] = createResource(connDb);
 
   return (
     <div>
@@ -33,9 +26,13 @@ export default function Default(props) {
       <Sidebar />
 
       <div class="ml-16 p-4">
-        <Show when={state.keliru.benarkah}>
-          <ToastSalah />
-        </Show>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Switch>
+            <Match when={db.error}>
+              <ToastSalah pesan={db.error.message} />
+            </Match>
+          </Switch>
+        </Suspense>
 
         {props.children}
       </div>
