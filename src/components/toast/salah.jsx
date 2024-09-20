@@ -1,11 +1,7 @@
 import { X, CircleAlert } from "lucide-solid";
-import { Show, createSignal, useContext } from "solid-js";
+import { Show, createSignal } from "solid-js";
 
-import { AppContext } from "../../stores";
-
-export default function ToastSalah() {
-  const { state, _ } = useContext(AppContext);
-
+export default function ToastSalah(props) {
   const [muncul, setMuncul] = createSignal(true);
   const [sembunyi, setSembunyi] = createSignal(false);
   const [transisi, setTransisi] = createSignal(false);
@@ -33,7 +29,7 @@ export default function ToastSalah() {
           <CircleAlert size={19} />
 
           <article class="prose text-wrap text-xs">
-            <p>{state.keliru.pesan}</p>
+            <p>{props.pesan}</p>
           </article>
 
           <button
