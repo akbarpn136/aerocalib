@@ -9,18 +9,14 @@ const SurrealDatabase = import.meta.env.VITE_SURREALDB_DATABASE
 const db = new Surreal()
 
 export const initDb = async () => {
-    try {
-        await db.connect(SurrealUrl)
-        await db.use({ namespace: SurrealNamespace, database: SurrealDatabase })
-        await db.signin({
-            namespace: SurrealNamespace,
-            database: SurrealDatabase,
-            username: SurrealUser,
-            password: SurrealPassword,
-        })
+    await db.connect(SurrealUrl)
+    await db.use({ namespace: SurrealNamespace, database: SurrealDatabase })
+    await db.signin({
+        namespace: SurrealNamespace,
+        database: SurrealDatabase,
+        username: SurrealUser,
+        password: SurrealPassword,
+    })
 
-        return db
-    } catch (err) {
-        throw err
-    }
+    return db
 }
