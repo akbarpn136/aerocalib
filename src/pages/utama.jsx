@@ -239,7 +239,7 @@ export default function HalamanUtama() {
                         </td>
                         <td>
                           <A
-                            href={`${item.id.id}/rincian`}
+                            href={`${item.id.id}/rincian?peralatan=${item.peralatan}&instansi=${item.instansi}`}
                             class="btn btn-ghost btn-sm"
                           >
                             <EllipsisVertical size={19} />
