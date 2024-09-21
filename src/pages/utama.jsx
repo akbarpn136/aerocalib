@@ -1,26 +1,28 @@
-import { A } from "@solidjs/router";
+import { produce } from "solid-js/store";
+import { A, useSearchParams } from "@solidjs/router";
 import {
-  EllipsisVertical,
-  ChevronRight,
-  ChevronLeft,
   Search,
+  ChevronLeft,
+  ChevronRight,
+  EllipsisVertical,
 } from "lucide-solid";
 import {
   For,
   Show,
   Switch,
   Match,
+  useContext,
   createEffect,
   createSignal,
-  useContext,
 } from "solid-js";
 
 import { AppContext } from "../stores";
-import { produce } from "solid-js/store";
 import { cariKegiatan, filterKegiatan } from "../lib/handlers/kegiatan";
 
 export default function HalamanUtama() {
   const limit = Number(import.meta.env.VITE_LIMIT_KEGIATAN);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [page, setPage] = createSignal(1);
   const [kata, setKata] = createSignal("");
@@ -32,6 +34,10 @@ export default function HalamanUtama() {
 
   const nextPage = () => {
     setPage(page() + 1);
+
+    setSearchParams({
+      pagekegiatan: page(),
+    });
   };
 
   const prevPage = () => {
@@ -40,6 +46,10 @@ export default function HalamanUtama() {
     } else {
       setPage(1);
     }
+
+    setSearchParams({
+      pagekegiatan: page(),
+    });
   };
 
   const onFilterKegiatan = async (
@@ -109,7 +119,7 @@ export default function HalamanUtama() {
       try {
         await onFilterKegiatan(
           state.surreal,
-          page(),
+          parseInt(searchParams.pagekegiatan),
           limit,
           kata(),
           state.arsipkegiatan
@@ -129,7 +139,13 @@ export default function HalamanUtama() {
       }
 
       try {
-        await onFilterKegiatan(db, page(), limit, kata(), state.arsipkegiatan);
+        await onFilterKegiatan(
+          db,
+          searchParams.pagekegiatan ? parseInt(searchParams.pagekegiatan) : 1,
+          limit,
+          kata(),
+          state.arsipkegiatan
+        );
       } catch (err) {
         throw err;
       }
@@ -140,7 +156,7 @@ export default function HalamanUtama() {
         setKosong(false);
       }
 
-      if (page() == 1) {
+      if (parseInt(searchParams.pagekegiatan) == 1) {
         setSebelumnya(false);
       } else {
         setSebelumnya(true);
@@ -196,7 +212,7 @@ export default function HalamanUtama() {
                   type="button"
                   class="btn btn-sm"
                   classList={{
-                    "rounded-s-none": page() > 1,
+                    "rounded-s-none": parseInt(searchParams.pagekegiatan) > 1,
                   }}
                   onClick={nextPage}
                 >
