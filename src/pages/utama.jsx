@@ -156,7 +156,7 @@ export default function HalamanUtama() {
         setKosong(false);
       }
 
-      if (parseInt(searchParams.pagekegiatan) == 1) {
+      if (parseInt(searchParams.pagekegiatan) == 1 || page() == 1) {
         setSebelumnya(false);
       } else {
         setSebelumnya(true);
