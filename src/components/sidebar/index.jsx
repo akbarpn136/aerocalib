@@ -1,4 +1,3 @@
-import { For } from "solid-js";
 import { A } from "@solidjs/router";
 import { MonitorCog, Info } from "lucide-solid";
 
