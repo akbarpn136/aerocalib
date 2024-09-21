@@ -3,11 +3,12 @@ import {
   Match,
   Switch,
   useContext,
+  createMemo,
   createSignal,
   createEffect,
 } from "solid-js";
-import { Archive, Plus, Pencil, ArchiveX } from "lucide-solid";
 import { useLocation } from "@solidjs/router";
+import { Archive, Plus, Pencil, ArchiveX } from "lucide-solid";
 
 import { AppContext } from "../../stores";
 import OlahKegiatan from "../kegiatan/olah";
@@ -18,6 +19,7 @@ export default function Navbar() {
   const [path, setPath] = createSignal("");
 
   const location = useLocation();
+  const pathname = createMemo(() => location.pathname);
 
   const onClickArsip = () => {
     setState("arsipkegiatan", !state.arsipkegiatan);
@@ -28,7 +30,7 @@ export default function Navbar() {
   };
 
   createEffect(() => {
-    setPath(location.pathname);
+    setPath(pathname());
   });
 
   return (
