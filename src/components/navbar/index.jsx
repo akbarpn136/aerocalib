@@ -6,7 +6,7 @@ import {
   createSignal,
   createEffect,
 } from "solid-js";
-import { Archive, Menu, Plus, Pencil, ArchiveX } from "lucide-solid";
+import { Archive, Plus, Pencil, ArchiveX } from "lucide-solid";
 import { useLocation } from "@solidjs/router";
 
 import { AppContext } from "../../stores";
@@ -40,7 +40,7 @@ export default function Navbar() {
               <button
                 type="button"
                 class="btn btn-secondary btn-sm"
-                onClick={onShowModal}
+                onClick="modal_olah_kegiatan.showModal()"
               >
                 <Plus size={19} />
               </button>
@@ -82,9 +82,23 @@ export default function Navbar() {
       </div>
 
       <Show when={showModal()}>
-        <OlahKegiatan setmodal={setShowModal} />
         <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40" />
       </Show>
+
+      <dialog
+        id="modal_olah_kegiatan"
+        class="modal modal-bottom sm:modal-middle"
+      >
+        <div class="modal-box space-y-6">
+          <h3 class="text-lg font-bold">Olah Kegiatan</h3>
+
+          <OlahKegiatan />
+        </div>
+
+        <form method="dialog" class="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     </div>
   );
 }
