@@ -35,7 +35,7 @@ export default function Navbar() {
 
   return (
     <div class="mt-2">
-      <div class="inline-flex ml-16 px-4 gap-x-2">
+      <div class="inline-flex ml-16 px-4 space-x-2">
         <Switch>
           <Match when={path() == "/"}>
             <div class="tooltip tooltip-right" data-tip="Tambah kegiatan">
