@@ -1,12 +1,13 @@
 import { z } from "zod";
 import { Save, CircleX } from "lucide-solid";
+import { useSearchParams } from "@solidjs/router";
 import { useContext, createSignal, createEffect, Show } from "solid-js";
 
 import { AppContext } from "../../stores";
 import { buatKegiatan } from "../../lib/handlers/kegiatan";
 
 export default function OlahKegiatan() {
-  const { state, setState } = useContext(AppContext);
+  const { state, _ } = useContext(AppContext);
 
   const [peralatan, setPeralatan] = createSignal(null);
   const [peralatanPesan, setPeralatanPesan] = createSignal(null);
@@ -17,6 +18,8 @@ export default function OlahKegiatan() {
   const [instansiError, setInstansiError] = createSignal(false);
 
   const [pesan, setPesan] = createSignal(null);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const Kegiatan = z
     .object({
@@ -47,9 +50,11 @@ export default function OlahKegiatan() {
 
       try {
         setPesan(null);
-        const result = await buatKegiatan({ db, peralatan, instansi });
+        await buatKegiatan({ db, peralatan, instansi });
 
-        console.log(result);
+        setSearchParams({
+          pagekegiatan: 1,
+        });
       } catch (err) {
         setPesan(err.message);
       }
