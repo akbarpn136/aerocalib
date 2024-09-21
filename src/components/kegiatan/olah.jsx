@@ -1,69 +1,80 @@
-import { Save } from "lucide-solid";
+import { z } from "zod";
+import { Save, CircleX } from "lucide-solid";
 import { useContext, createSignal, createEffect, Show } from "solid-js";
 
-import ToastSalah from "../toast/salah";
-import { produce } from "solid-js/store";
 import { AppContext } from "../../stores";
 import { buatKegiatan } from "../../lib/handlers/kegiatan";
 
 export default function OlahKegiatan() {
   const { state, setState } = useContext(AppContext);
 
-  const [peralatan, setPeralatan] = createSignal("");
+  const [peralatan, setPeralatan] = createSignal(null);
+  const [peralatanPesan, setPeralatanPesan] = createSignal(null);
   const [peralatanError, setPeralatanError] = createSignal(false);
 
-  const [instansi, setInstansi] = createSignal("");
+  const [instansi, setInstansi] = createSignal(null);
+  const [instansiPesan, setInstansiPesan] = createSignal(null);
   const [instansiError, setInstansiError] = createSignal(false);
 
-  const onFormSubmit = async (e) => {
-    const db = state.surreal;
+  const [pesan, setPesan] = createSignal(null);
 
+  const Kegiatan = z
+    .object({
+      peralatan: z.string().min(3),
+      instansi: z.string().min(3),
+    })
+    .required();
+
+  const onFormSubmit = async (e) => {
     e.preventDefault();
 
-    if (peralatan() == "") {
-      setPeralatanError(true);
-    } else {
+    const db = state.surreal;
+
+    const valid = Kegiatan.safeParse({
+      peralatan: peralatan(),
+      instansi: instansi(),
+    });
+
+    if (valid.success) {
       setPeralatanError(false);
-    }
+      setPeralatanPesan(null);
 
-    if (instansi() == "") {
-      setInstansiError(true);
-    } else {
       setInstansiError(false);
-    }
+      setInstansiPesan(null);
 
-    if (!instansiError() && !peralatanError()) {
+      const peralatan = valid.data.peralatan;
+      const instansi = valid.data.instansi;
+
       try {
-        const result = await buatKegiatan(db, {
-          peralatan: peralatan(),
-          instansi: instansi(),
-        });
+        setPesan(null);
+        const result = await buatKegiatan({ db, peralatan, instansi });
 
-        setState(
-          "kegiatan",
-          produce((kegiatans) => {
-            kegiatans.pop();
-            kegiatans.unshift(result[0]);
-          })
-        );
+        console.log(result);
       } catch (err) {
-        setState(
-          "keliru",
-          produce((payload) => {
-            payload.benarkah = true;
-            payload.pesan = err.message;
-          })
-        );
+        setPesan(err.message);
       }
-
-      setmodal(false);
-      setInstansiError(false);
-      setPeralatanError(false);
+    } else {
+      valid.error.issues.forEach((err) => {
+        if (err.path[0] === "peralatan") {
+          setPeralatanError(true);
+          setPeralatanPesan(err.message);
+        } else {
+          setInstansiError(true);
+          setInstansiPesan(err.message);
+        }
+      });
     }
   };
 
   return (
     <form class="space-y-4">
+      <Show when={pesan()}>
+        <div role="alert" class="alert alert-error">
+          <CircleX size={19} />
+          <span>{pesan()}</span>
+        </div>
+      </Show>
+
       <label class="form-control w-full">
         <div class="label">
           <span class="label-text">Peralatan</span>
@@ -85,7 +96,7 @@ export default function OlahKegiatan() {
 
         <Show when={peralatanError()}>
           <div class="label">
-            <span class="label-text-alt text-error">Peralatan diperlukan</span>
+            <span class="label-text-alt text-error">{peralatanPesan}</span>
           </div>
         </Show>
       </label>
@@ -111,7 +122,7 @@ export default function OlahKegiatan() {
 
         <Show when={instansiError()}>
           <div class="label">
-            <span class="label-text-alt text-error">Instansi diperlukan</span>
+            <span class="label-text-alt text-error">{instansiPesan}</span>
           </div>
         </Show>
       </label>
