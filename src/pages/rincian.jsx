@@ -1,7 +1,11 @@
-import { useParams } from "@solidjs/router";
+import { useParams, useSearchParams } from "@solidjs/router";
+
+import DefaultStats from "../components/rincian/stats";
 
 export default function HalamanRincian() {
-  const params = useParams();
-
-  return <div>Halaman rincian kegiatan {params.id}</div>;
+  return (
+    <div>
+      <DefaultStats />
+    </div>
+  );
 }
