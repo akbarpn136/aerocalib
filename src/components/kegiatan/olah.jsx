@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { Save, CircleX } from "lucide-solid";
-import { useSearchParams } from "@solidjs/router";
-import { useContext, createSignal, createEffect, Show } from "solid-js";
+import { useParams, useSearchParams } from "@solidjs/router";
+import { Show, useContext, createSignal, createEffect } from "solid-js";
 
 import { AppContext } from "../../stores";
-import { buatKegiatan } from "../../lib/handlers/kegiatan";
+import { buatKegiatan, updateKegiatan } from "../../lib/handlers/kegiatan";
 
 export default function OlahKegiatan() {
   const { state, _ } = useContext(AppContext);
@@ -18,8 +18,11 @@ export default function OlahKegiatan() {
   const [instansiError, setInstansiError] = createSignal(false);
 
   const [pesan, setPesan] = createSignal(null);
+  const [ubah, setUbah] = createSignal(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const params = useParams();
 
   const Kegiatan = z
     .object({
@@ -48,16 +51,37 @@ export default function OlahKegiatan() {
       const peralatan = valid.data.peralatan;
       const instansi = valid.data.instansi;
 
-      try {
-        setPesan(null);
-        await buatKegiatan({ db, peralatan, instansi });
+      if (ubah()) {
+        try {
+          setPesan(null);
+          const result = await updateKegiatan({
+            db,
+            id: params.id,
+            peralatan,
+            instansi,
+          });
 
-        setSearchParams({
-          pagekegiatan: 1,
-        });
-      } catch (err) {
-        setPesan(err.message);
+          setSearchParams({
+            peralatan: result[0].peralatan,
+            instansi: result[0].instansi,
+          });
+        } catch (err) {
+          setPesan(err.message);
+        }
+      } else {
+        try {
+          setPesan(null);
+          await buatKegiatan({ db, peralatan, instansi });
+
+          setSearchParams({
+            pagekegiatan: 1,
+          });
+        } catch (err) {
+          setPesan(err.message);
+        }
       }
+
+      document.getElementById("modal_olah_kegiatan").close();
     } else {
       valid.error.issues.forEach((err) => {
         if (err.path[0] === "peralatan") {
@@ -70,6 +94,16 @@ export default function OlahKegiatan() {
       });
     }
   };
+
+  createEffect(() => {
+    if (params.id == null) {
+      setUbah(false);
+    } else {
+      setUbah(true);
+      setPeralatan(searchParams.peralatan);
+      setInstansi(searchParams.instansi);
+    }
+  });
 
   return (
     <form class="space-y-4">
