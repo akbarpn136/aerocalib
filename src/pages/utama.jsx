@@ -115,6 +115,9 @@ export default function HalamanUtama() {
     if (e.keyCode == 13) {
       setPage(1);
       setKata(e.currentTarget.value);
+      setSearchParams({
+        pagekegiatan: 1,
+      });
 
       try {
         await onFilterKegiatan(
