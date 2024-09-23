@@ -30,3 +30,9 @@ export const filterKegiatanId = async (db, id) => {
 
   return result[0]
 }
+
+export const updateKegiatan = async ({db, id, peralatan, instansi}) => {
+  const result = await db.query(`UPDATE kegiatan:${id} SET peralatan = $peralatan, instansi = $instansi;`, { peralatan, instansi })
+
+  return result[0]
+}
