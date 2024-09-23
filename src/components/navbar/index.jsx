@@ -1,5 +1,4 @@
 import {
-  Show,
   Match,
   Switch,
   useContext,
@@ -14,19 +13,14 @@ import { AppContext } from "../../stores";
 import OlahKegiatan from "../kegiatan/olah";
 
 export default function Navbar() {
-  const { state, setState } = useContext(AppContext);
-  const [showModal, setShowModal] = createSignal(false);
   const [path, setPath] = createSignal("");
+  const { state, setState } = useContext(AppContext);
 
   const location = useLocation();
   const pathname = createMemo(() => location.pathname);
 
   const onClickArsip = () => {
     setState("arsipkegiatan", !state.arsipkegiatan);
-  };
-
-  const onShowModal = () => {
-    setShowModal(true);
   };
 
   createEffect(() => {
@@ -64,7 +58,7 @@ export default function Navbar() {
               <button
                 type="button"
                 class="btn btn-secondary btn-sm"
-                onClick={onShowModal}
+                onClick="modal_olah_kegiatan.showModal()"
               >
                 <Pencil size={19} />
               </button>
@@ -74,7 +68,7 @@ export default function Navbar() {
               <button
                 type="button"
                 class="btn btn-secondary btn-sm"
-                onClick={onShowModal}
+                onClick="modal_olah_kegiatan.showModal()"
               >
                 <ArchiveX size={19} />
               </button>
@@ -82,10 +76,6 @@ export default function Navbar() {
           </Match>
         </Switch>
       </div>
-
-      <Show when={showModal()}>
-        <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40" />
-      </Show>
 
       <dialog
         id="modal_olah_kegiatan"
