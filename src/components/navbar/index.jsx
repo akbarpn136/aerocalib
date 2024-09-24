@@ -5,14 +5,16 @@ import {
   createMemo,
   createSignal,
   createEffect,
+  lazy,
 } from "solid-js";
 import { useLocation } from "@solidjs/router";
 import { Archive, Plus, Pencil, ArchiveX } from "lucide-solid";
 
 import { AppContext } from "../../stores";
-import OlahKegiatan from "../kegiatan/olah";
 
 export default function Navbar() {
+  const OlahKegiatanComponent = lazy(() => import("../kegiatan/olah"));
+
   const [path, setPath] = createSignal("");
   const { state, setState } = useContext(AppContext);
 
@@ -84,7 +86,7 @@ export default function Navbar() {
         <div class="modal-box space-y-6">
           <h3 class="text-lg font-bold">Olah Kegiatan</h3>
 
-          <OlahKegiatan />
+          <OlahKegiatanComponent />
         </div>
 
         <form method="dialog" class="modal-backdrop">
