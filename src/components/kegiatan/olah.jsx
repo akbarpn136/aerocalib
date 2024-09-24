@@ -17,6 +17,8 @@ export default function OlahKegiatan() {
   const [instansiPesan, setInstansiPesan] = createSignal(null);
   const [instansiError, setInstansiError] = createSignal(false);
 
+  const [arsipkan, setArsipkan] = createSignal(false);
+
   const [pesan, setPesan] = createSignal(null);
   const [ubah, setUbah] = createSignal(false);
 
@@ -59,6 +61,7 @@ export default function OlahKegiatan() {
             id: params.id,
             peralatan,
             instansi,
+            arsip: arsipkan(),
           });
 
           setSearchParams({
@@ -98,10 +101,13 @@ export default function OlahKegiatan() {
   createEffect(() => {
     if (params.id == null) {
       setUbah(false);
+      setPeralatan(null);
+      setInstansi(null);
     } else {
       setUbah(true);
       setPeralatan(searchParams.peralatan);
       setInstansi(searchParams.instansi);
+      setArsipkan(searchParams.arsip === "true");
     }
   });
 
@@ -165,6 +171,20 @@ export default function OlahKegiatan() {
           </div>
         </Show>
       </label>
+
+      <Show when={ubah()}>
+        <div class="form-control">
+          <label class="label cursor-pointer">
+            <span class="label-text">Arsipkan?</span>
+            <input
+              type="checkbox"
+              checked={arsipkan()}
+              class="checkbox"
+              onClick={() => setArsipkan(!arsipkan())}
+            />
+          </label>
+        </div>
+      </Show>
 
       <button
         class="btn btn-primary text-primary-content"
