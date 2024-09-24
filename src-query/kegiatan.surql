@@ -9,6 +9,7 @@ DEFINE FIELD arsip ON TABLE kegiatan TYPE bool;
 DEFINE FIELD dibuat ON TABLE kegiatan TYPE datetime;
 DEFINE FIELD instansi ON TABLE kegiatan TYPE string;
 DEFINE FIELD peralatan ON TABLE kegiatan TYPE string;
+DEFINE FIELD peralatan ON TABLE kalibrasi TYPE string;
 
 -- Define index
 DEFINE INDEX unique_peralatan ON TABLE kegiatan COLUMNS peralatan UNIQUE;
