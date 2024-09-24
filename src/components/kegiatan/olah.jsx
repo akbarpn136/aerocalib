@@ -17,6 +17,7 @@ export default function OlahKegiatan() {
   const [instansiPesan, setInstansiPesan] = createSignal(null);
   const [instansiError, setInstansiError] = createSignal(false);
 
+  const [kalibrasi, setKalibrasi] = createSignal("tekanan");
   const [arsipkan, setArsipkan] = createSignal(false);
 
   const [pesan, setPesan] = createSignal(null);
@@ -61,6 +62,7 @@ export default function OlahKegiatan() {
             id: params.id,
             peralatan,
             instansi,
+            kalibrasi: kalibrasi(),
             arsip: arsipkan(),
           });
 
@@ -74,11 +76,22 @@ export default function OlahKegiatan() {
       } else {
         try {
           setPesan(null);
-          await buatKegiatan({ db, peralatan, instansi });
+
+          await buatKegiatan({
+            db,
+            peralatan,
+            instansi,
+            kalibrasi: kalibrasi(),
+          });
 
           setSearchParams({
             pagekegiatan: 1,
+            arsip: false,
           });
+
+          setPeralatan(null);
+          setInstansi(null);
+          setKalibrasi("tekanan");
         } catch (err) {
           setPesan(err.message);
         }
@@ -98,6 +111,10 @@ export default function OlahKegiatan() {
     }
   };
 
+  const onSelectKalibrasi = (e) => {
+    setKalibrasi(e.currentTarget.value);
+  };
+
   createEffect(() => {
     if (params.id == null) {
       setUbah(false);
@@ -107,6 +124,7 @@ export default function OlahKegiatan() {
       setUbah(true);
       setPeralatan(searchParams.peralatan);
       setInstansi(searchParams.instansi);
+      setKalibrasi(searchParams.kalibrasi);
       setArsipkan(searchParams.arsip === "true");
     }
   });
@@ -170,6 +188,20 @@ export default function OlahKegiatan() {
             <span class="label-text-alt text-error">{instansiPesan}</span>
           </div>
         </Show>
+      </label>
+
+      <label class="form-control w-full">
+        <div class="label">
+          <span class="label-text">Jenis kalibrasi</span>
+        </div>
+        <select class="select select-bordered" onChange={onSelectKalibrasi}>
+          <option value="tekanan" selected={kalibrasi() === "tekanan"}>
+            Tekanan
+          </option>
+          <option value="kecepatan" selected={kalibrasi() === "kecepatan"}>
+            Kecepatan
+          </option>
+        </select>
       </label>
 
       <Show when={ubah()}>
