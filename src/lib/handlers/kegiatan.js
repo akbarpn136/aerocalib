@@ -1,7 +1,7 @@
-export const buatKegiatan = async ({db, peralatan, instansi}) => {
+export const buatKegiatan = async ({db, peralatan, instansi, kalibrasi}) => {
   const result = await db.query(
-    "CREATE kegiatan SET peralatan = $peralatan, instansi = $instansi, dibuat = time::now(), arsip = false;",
-    { peralatan, instansi }
+    "CREATE kegiatan SET peralatan = $peralatan, instansi = $instansi, kalibrasi = $kalibrasi, dibuat = time::now(), arsip = false;",
+    { peralatan, instansi, kalibrasi }
   )
 
   return result[0]
@@ -31,8 +31,8 @@ export const filterKegiatanId = async (db, id) => {
   return result[0]
 }
 
-export const updateKegiatan = async ({db, id, peralatan, instansi, arsip}) => {
-  const result = await db.query(`UPDATE kegiatan:${id} SET peralatan = $peralatan, instansi = $instansi, arsip = $arsip;`, { peralatan, instansi, arsip })
+export const updateKegiatan = async ({db, id, peralatan, instansi, kalibrasi, arsip}) => {
+  const result = await db.query(`UPDATE kegiatan:${id} SET peralatan = $peralatan, instansi = $instansi, kalibrasi = $kalibrasi, arsip = $arsip;`, { peralatan, instansi, kalibrasi, arsip })
 
   return result[0]
 }
