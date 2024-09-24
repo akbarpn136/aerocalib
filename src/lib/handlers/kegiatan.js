@@ -9,7 +9,7 @@ export const buatKegiatan = async ({db, peralatan, instansi}) => {
 
 export const filterKegiatan = async (db, page, limit, arsip=false) => {
   const result = await db.query(
-    "SELECT id, peralatan, instansi, dibuat FROM kegiatan WHERE arsip = $arsip ORDER BY dibuat DESC LIMIT $limit START ($page - 1) * $limit;",
+    "SELECT * FROM kegiatan WHERE arsip = $arsip ORDER BY dibuat DESC LIMIT $limit START ($page - 1) * $limit;",
     { page, limit, arsip }
   )
 
@@ -31,8 +31,8 @@ export const filterKegiatanId = async (db, id) => {
   return result[0]
 }
 
-export const updateKegiatan = async ({db, id, peralatan, instansi}) => {
-  const result = await db.query(`UPDATE kegiatan:${id} SET peralatan = $peralatan, instansi = $instansi;`, { peralatan, instansi })
+export const updateKegiatan = async ({db, id, peralatan, instansi, arsip}) => {
+  const result = await db.query(`UPDATE kegiatan:${id} SET peralatan = $peralatan, instansi = $instansi, arsip = $arsip;`, { peralatan, instansi, arsip })
 
   return result[0]
 }
