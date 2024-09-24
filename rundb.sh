@@ -1,2 +1,2 @@
-# Db untuk pengembangan lokal dengan Surreldb
-surreal start --user root --pass root file:aerocalib.db
+# Db untuk pengembangan lokal dengan Surreldb melalui docker
+docker run --name aerocalib -d --pull always -p 8000:8000 --user $(id -u) -v /home/justsimple/Database:/aerocalib surrealdb/surrealdb:v1.5.5-dev start --user root --pass root file:/aerocalib/aerocalib.db
