@@ -7,7 +7,7 @@ export default function HalamanRincian() {
   );
 
   return (
-    <div class="space-y-8 h-[calc(100vh-300px)]">
+    <div class="space-y-8 h-[calc(100vh-505px)] md:h-[calc(100vh-230px)]">
       <DefaultStatsComponent />
 
       <DefaultPlotComponent />
