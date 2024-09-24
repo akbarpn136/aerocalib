@@ -1,12 +1,20 @@
-import { Match, Switch, Suspense, useContext, createResource } from "solid-js";
+import {
+  Match,
+  Switch,
+  Suspense,
+  useContext,
+  createResource,
+  lazy,
+} from "solid-js";
 
 import { AppContext } from "../stores";
-import Navbar from "../components/navbar";
 import { initDb } from "../lib/configs/db";
-import Sidebar from "../components/sidebar";
-import ToastSalah from "../components/toast/salah";
 
 export default function Default(props) {
+  const NavbarComponent = lazy(() => import("../components/navbar"));
+  const SidebarComponent = lazy(() => import("../components/sidebar"));
+  const ToastSalahComponent = lazy(() => import("../components/toast/salah"));
+
   const { _, setState } = useContext(AppContext);
 
   const connDb = async () => {
@@ -21,15 +29,15 @@ export default function Default(props) {
 
   return (
     <div>
-      <Navbar />
+      <NavbarComponent />
 
-      <Sidebar />
+      <SidebarComponent />
 
       <div class="ml-16 p-4">
         <Suspense fallback={<div>Loading...</div>}>
           <Switch>
             <Match when={db.error}>
-              <ToastSalah pesan={db.error.message} />
+              <ToastSalahComponent pesan={db.error.message} />
             </Match>
           </Switch>
         </Suspense>

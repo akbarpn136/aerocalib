@@ -1,11 +1,16 @@
-import DefaultPlot from "../components/rincian/plot";
-import DefaultStats from "../components/rincian/stats";
+import { lazy } from "solid-js";
 
 export default function HalamanRincian() {
+  const DefaultPlotComponent = lazy(() => import("../components/rincian/plot"));
+  const DefaultStatsComponent = lazy(() =>
+    import("../components/rincian/stats")
+  );
+
   return (
-    <div class="space-y-8 h-[calc(100vh-210px)]">
-      <DefaultStats />
-      <DefaultPlot />
+    <div class="space-y-8 h-[calc(100vh-235px)]">
+      <DefaultStatsComponent />
+
+      <DefaultPlotComponent />
     </div>
   );
 }
