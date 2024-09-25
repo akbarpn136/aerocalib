@@ -236,6 +236,7 @@ export default function HalamanUtama() {
             <tr>
               <th scope="col">Peralatan</th>
               <th scope="col">Instansi</th>
+              <th scope="col">Status</th>
               <th scope="col">Dibuat</th>
               <th scope="col">Opsi</th>
             </tr>
@@ -249,6 +250,11 @@ export default function HalamanUtama() {
                       <tr>
                         <th scope="row">{item.peralatan}</th>
                         <td>{item.instansi}</td>
+                        <td>
+                          <span class="badge badge-accent badge-sm">
+                            {item.arsip ? "arsip" : "aktif"}
+                          </span>
+                        </td>
                         <td>
                           {item.dibuat.toLocaleString("id-id", {
                             weekday: "long",
