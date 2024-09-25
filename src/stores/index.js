@@ -10,5 +10,4 @@ export const [state, setState] = createStore({
         benarkah: false,
         pesan: ""
     },
-    arsipkegiatan: false
 })
