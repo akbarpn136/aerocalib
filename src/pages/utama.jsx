@@ -35,9 +35,16 @@ export default function HalamanUtama() {
   const nextPage = () => {
     setPage(page() + 1);
 
-    setSearchParams({
-      pagekegiatan: page(),
-    });
+    if (searchParams.arsip) {
+      setSearchParams({
+        pagekegiatan: page(),
+      });
+    } else {
+      setSearchParams({
+        pagekegiatan: page(),
+        arsip: false,
+      });
+    }
   };
 
   const prevPage = () => {
@@ -64,21 +71,9 @@ export default function HalamanUtama() {
 
     try {
       if (cari !== "") {
-        hasil = await cariKegiatan(
-          state.surreal,
-          page,
-          limit,
-          cari,
-          state.arsipkegiatan
-        );
+        hasil = await cariKegiatan(state.surreal, page, limit, cari);
 
-        hasil_next = await cariKegiatan(
-          state.surreal,
-          page + 1,
-          limit,
-          cari,
-          state.arsipkegiatan
-        );
+        hasil_next = await cariKegiatan(state.surreal, page + 1, limit, cari);
       } else {
         hasil = await filterKegiatan(db, page, limit, arsip);
 
@@ -115,9 +110,17 @@ export default function HalamanUtama() {
     if (e.keyCode == 13) {
       setPage(1);
       setKata(e.currentTarget.value);
-      setSearchParams({
-        pagekegiatan: 1,
-      });
+
+      if (searchParams.arsip) {
+        setSearchParams({
+          pagekegiatan: page(),
+        });
+      } else {
+        setSearchParams({
+          pagekegiatan: page(),
+          arsip: false,
+        });
+      }
 
       try {
         await onFilterKegiatan(
@@ -125,7 +128,7 @@ export default function HalamanUtama() {
           parseInt(searchParams.pagekegiatan),
           limit,
           kata(),
-          state.arsipkegiatan
+          searchParams.arsip ? searchParams.arsip === "true" : false
         );
       } catch (err) {
         throw err;
@@ -137,7 +140,7 @@ export default function HalamanUtama() {
     const db = state.surreal;
 
     if (db !== null) {
-      if (state.arsipkegiatan) {
+      if (searchParams.arsip == null) {
         setPage(1);
       }
 
@@ -147,7 +150,7 @@ export default function HalamanUtama() {
           searchParams.pagekegiatan ? parseInt(searchParams.pagekegiatan) : 1,
           limit,
           kata(),
-          state.arsipkegiatan
+          searchParams.arsip ? searchParams.arsip === "true" : false
         );
       } catch (err) {
         throw err;
