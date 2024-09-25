@@ -18,6 +18,9 @@ export default function DefaultStats() {
           <div class="stat-value text-wrap">
             {searchParam.peralatan ? searchParam.peralatan : "Peralatan"}
           </div>
+          <div class="stat-desc">
+            Status: {searchParam.arsip === "false" ? "Aktif" : "Arsip"}
+          </div>
         </div>
 
         <div class="stat">
