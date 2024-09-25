@@ -1,28 +1,34 @@
 import {
   Match,
   Switch,
-  useContext,
   createMemo,
   createSignal,
   createEffect,
   lazy,
 } from "solid-js";
-import { useLocation } from "@solidjs/router";
+import { useLocation, useSearchParams } from "@solidjs/router";
 import { Archive, Plus, Pencil, ArchiveX } from "lucide-solid";
-
-import { AppContext } from "../../stores";
 
 export default function Navbar() {
   const OlahKegiatanComponent = lazy(() => import("../kegiatan/olah"));
 
   const [path, setPath] = createSignal("");
-  const { state, setState } = useContext(AppContext);
 
   const location = useLocation();
   const pathname = createMemo(() => location.pathname);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const onClickArsip = () => {
-    setState("arsipkegiatan", !state.arsipkegiatan);
+    if (searchParams.arsip) {
+      setSearchParams({
+        arsip: searchParams.arsip === "false",
+      });
+    } else {
+      setSearchParams({
+        arsip: true,
+      });
+    }
   };
 
   createEffect(() => {
