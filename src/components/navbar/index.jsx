@@ -7,7 +7,7 @@ import {
   lazy,
 } from "solid-js";
 import { useLocation, useSearchParams } from "@solidjs/router";
-import { Archive, Plus, Pencil, ArchiveX } from "lucide-solid";
+import { Archive, Plus, Pencil, PackagePlus } from "lucide-solid";
 
 export default function Navbar() {
   const OlahKegiatanComponent = lazy(() => import("../kegiatan/olah"));
@@ -72,13 +72,13 @@ export default function Navbar() {
               </button>
             </div>
 
-            <div class="tooltip tooltip-right" data-tip="Arsipkan kegiatan">
+            <div class="tooltip tooltip-right" data-tip="Olah data pengujian">
               <button
                 type="button"
                 class="btn btn-secondary btn-sm"
-                onClick="modal_olah_kegiatan.showModal()"
+                onClick="modal_olah_sensor.showModal()"
               >
-                <ArchiveX size={19} />
+                <PackagePlus size={19} />
               </button>
             </div>
           </Match>
