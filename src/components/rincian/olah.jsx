@@ -1,8 +1,12 @@
 import { z } from "zod";
+import { useParams } from "@solidjs/router";
 import { createStore } from "solid-js/store";
+import { Show } from "solid-js";
 
 export default function OlahSensor() {
+  const params = useParams();
   const [store, setStore] = createStore({
+    validkah: false,
     run: { value: 1, error: null },
     polar: { value: 1, error: null },
     frekuensi: { value: 0, error: null },
@@ -35,20 +39,76 @@ export default function OlahSensor() {
   const onFormSubmit = (e) => {
     e.preventDefault();
 
-    const valid = sensor.safeParse({
-      run: "",
-      polar: "",
-      frekuensi: "",
-      vpitot: "",
-      tekanan: "",
-      temperatur: "",
-      kelembapan: "",
-      barometer: "",
-      vklien: "",
-      pklien: "",
-    });
+    const kegiatanId = params.id;
+    const payload = {
+      run: store.run.value,
+      polar: store.polar.value,
+      frekuensi: store.frekuensi.value,
+      vpitot: store.vpitot.value,
+      tekanan: store.tekanan.value,
+      temperatur: store.temperatur.value,
+      kelembapan: store.kelembapan.value,
+      barometer: store.barometer.value,
+      vklien: store.vklien.value,
+      pklien: store.pklien.value,
+    };
 
-    console.log(valid.error.issues);
+    const valid = sensor.safeParse(payload);
+    if (valid.success) {
+      setStore("validkah", true);
+
+      const user_data = {
+        id: kegiatanId,
+        ...payload,
+      };
+    } else {
+      setStore("validkah", false);
+      valid.error.issues.forEach((err) => {
+        const kategori = err.path[0];
+
+        switch (kategori) {
+          case "run":
+            setStore("run", "error", err.message);
+            break;
+
+          case "polar":
+            setStore("polar", "error", err.message);
+            break;
+
+          case "frekuensi":
+            setStore("frekuensi", "error", err.message);
+            break;
+
+          case "vpitot":
+            setStore("vpitot", "error", err.message);
+            break;
+
+          case "tekanan":
+            setStore("tekanan", "error", err.message);
+            break;
+
+          case "temperatur":
+            setStore("temperatur", "error", err.message);
+            break;
+
+          case "kelembapan":
+            setStore("kelembapan", "error", err.message);
+            break;
+
+          case "barometer":
+            setStore("barometer", "error", err.message);
+            break;
+
+          case "vklien":
+            setStore("vklien", "error", err.message);
+            break;
+
+          case "pklien":
+            setStore("pklien", "error", err.message);
+            break;
+        }
+      });
+    }
   };
 
   return (
@@ -64,11 +124,16 @@ export default function OlahSensor() {
             min="1"
             class="input input-bordered w-full"
             value={store.run.value}
-            onInput={(e) => setStore("run.value", e.currentTarget.value)}
+            onInput={(e) =>
+              setStore("run", "value", parseInt(e.currentTarget.value))
+            }
           />
-          <div class="label">
-            <span class="label-text-alt"></span>
-          </div>
+
+          <Show when={!store.validkah}>
+            <div class="label">
+              <span class="label-text-alt text-error">{store.run.error}</span>
+            </div>
+          </Show>
         </label>
 
         <label class="form-control w-full">
@@ -81,11 +146,16 @@ export default function OlahSensor() {
             min="1"
             class="input input-bordered w-full"
             value={store.polar.value}
-            onInput={(e) => setStore("polar.value", e.currentTarget.value)}
+            onInput={(e) =>
+              setStore("polar", "value", parseInt(e.currentTarget.value))
+            }
           />
-          <div class="label">
-            <span class="label-text-alt"></span>
-          </div>
+
+          <Show when={!store.validkah}>
+            <div class="label">
+              <span class="label-text-alt text-error">{store.polar.error}</span>
+            </div>
+          </Show>
         </label>
       </div>
 
@@ -101,11 +171,18 @@ export default function OlahSensor() {
             step=".01"
             class="input input-bordered w-full"
             value={store.frekuensi.value}
-            onInput={(e) => setStore("frekuensi.value", e.currentTarget.value)}
+            onInput={(e) =>
+              setStore("frekuensi", "value", parseFloat(e.currentTarget.value))
+            }
           />
-          <div class="label">
-            <span class="label-text-alt"></span>
-          </div>
+
+          <Show when={!store.validkah}>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                {store.frekuensi.error}
+              </span>
+            </div>
+          </Show>
         </label>
 
         <label class="form-control w-full">
@@ -119,11 +196,18 @@ export default function OlahSensor() {
             step=".01"
             class="input input-bordered w-full"
             value={store.vpitot.value}
-            onInput={(e) => setStore("vpitot.value", e.currentTarget.value)}
+            onInput={(e) =>
+              setStore("vpitot", "value", parseFloat(e.currentTarget.value))
+            }
           />
-          <div class="label">
-            <span class="label-text-alt"></span>
-          </div>
+
+          <Show when={!store.validkah}>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                {store.vpitot.error}
+              </span>
+            </div>
+          </Show>
         </label>
 
         <label class="form-control w-full">
@@ -137,11 +221,18 @@ export default function OlahSensor() {
             step=".01"
             class="input input-bordered w-full"
             value={store.tekanan.value}
-            onInput={(e) => setStore("tekanan.value", e.currentTarget.value)}
+            onInput={(e) =>
+              setStore("tekanan", "value", parseFloat(e.currentTarget.value))
+            }
           />
-          <div class="label">
-            <span class="label-text-alt"></span>
-          </div>
+
+          <Show when={!store.validkah}>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                {store.tekanan.error}
+              </span>
+            </div>
+          </Show>
         </label>
       </div>
 
@@ -157,11 +248,18 @@ export default function OlahSensor() {
             step=".01"
             class="input input-bordered w-full"
             value={store.temperatur.value}
-            onInput={(e) => setStore("temperatur.value", e.currentTarget.value)}
+            onInput={(e) =>
+              setStore("temperatur", "value", parseFloat(e.currentTarget.value))
+            }
           />
-          <div class="label">
-            <span class="label-text-alt"></span>
-          </div>
+
+          <Show when={!store.validkah}>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                {store.temperatur.error}
+              </span>
+            </div>
+          </Show>
         </label>
 
         <label class="form-control w-full">
@@ -175,11 +273,18 @@ export default function OlahSensor() {
             step=".01"
             class="input input-bordered w-full"
             value={store.kelembapan.value}
-            onInput={(e) => setStore("kelembapan.value", e.currentTarget.value)}
+            onInput={(e) =>
+              setStore("kelembapan", "value", parseFloat(e.currentTarget.value))
+            }
           />
-          <div class="label">
-            <span class="label-text-alt"></span>
-          </div>
+
+          <Show when={!store.validkah}>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                {store.kelembapan.error}
+              </span>
+            </div>
+          </Show>
         </label>
 
         <label class="form-control w-full">
@@ -193,11 +298,18 @@ export default function OlahSensor() {
             step=".01"
             class="input input-bordered w-full"
             value={store.barometer.value}
-            onInput={(e) => setStore("barometer.value", e.currentTarget.value)}
+            onInput={(e) =>
+              setStore("barometer", "value", parseFloat(e.currentTarget.value))
+            }
           />
-          <div class="label">
-            <span class="label-text-alt"></span>
-          </div>
+
+          <Show when={!store.validkah}>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                {store.barometer.error}
+              </span>
+            </div>
+          </Show>
         </label>
       </div>
 
@@ -213,11 +325,18 @@ export default function OlahSensor() {
             step=".01"
             class="input input-bordered w-full"
             value={store.vklien.value}
-            onInput={(e) => setStore("vklien.value", e.currentTarget.value)}
+            onInput={(e) =>
+              setStore("vklien", "value", parseFloat(e.currentTarget.value))
+            }
           />
-          <div class="label">
-            <span class="label-text-alt"></span>
-          </div>
+
+          <Show when={!store.validkah}>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                {store.vklien.error}
+              </span>
+            </div>
+          </Show>
         </label>
 
         <label class="form-control w-full">
@@ -247,9 +366,6 @@ export default function OlahSensor() {
               mm/h
             </option>
           </select>
-          <div class="label">
-            <span class="label-text-alt"></span>
-          </div>
         </label>
 
         <label class="form-control w-full">
@@ -263,11 +379,18 @@ export default function OlahSensor() {
             step=".01"
             class="input input-bordered w-full"
             value={store.pklien.value}
-            onInput={(e) => setStore("pklien.value", e.currentTarget.value)}
+            onInput={(e) =>
+              setStore("pklien", "value", parseFloat(e.currentTarget.value))
+            }
           />
-          <div class="label">
-            <span class="label-text-alt"></span>
-          </div>
+
+          <Show when={!store.validkah}>
+            <div class="label">
+              <span class="label-text-alt text-error">
+                {store.pklien.error}
+              </span>
+            </div>
+          </Show>
         </label>
 
         <label class="form-control w-full">
@@ -309,9 +432,6 @@ export default function OlahSensor() {
               ksi
             </option>
           </select>
-          <div class="label">
-            <span class="label-text-alt"></span>
-          </div>
         </label>
       </div>
 
