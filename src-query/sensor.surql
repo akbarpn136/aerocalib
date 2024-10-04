@@ -17,6 +17,8 @@ DEFINE FIELD kegiatan ON sensor TYPE record<kegiatan>;
 DEFINE FIELD kelembapan ON sensor TYPE decimal;
 DEFINE FIELD pklien ON sensor TYPE decimal;
 DEFINE FIELD psatuan ON sensor TYPE string;
+DEFINE FIELD run ON sensor TYPE int;
+DEFINE FIELD polar ON sensor TYPE int;
 DEFINE FIELD tekanan ON sensor TYPE decimal;
 DEFINE FIELD temperatur ON sensor TYPE decimal;
 DEFINE FIELD vklien ON sensor TYPE decimal;
