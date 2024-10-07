@@ -1,4 +1,4 @@
-export const buatKegiatan = async ({
+export const buatSensor = async ({
   db,
   barometer,
   frekuensi,
@@ -15,7 +15,7 @@ export const buatKegiatan = async ({
   vsatuan,
 }) => {
   const result = await db.query(
-    "CREATE sensor SET run = $run, polar = $polar, frekuensi = $frekuensi, vpitot = $vpitot, tekanan = $tekanan, temperatur = $temperatur, kelembapan = $kelembapan, barometer = $barometer, vklien = $vklien, vsatuan = $vsatuan, pklien = $pklien, psatuan = $psatuan, dibuat = time::now(), kegiatan = $kegiatan;",
+    "CREATE sensor SET run = $run, polar = $polar, frekuensi = $frekuensi, vpitot = $vpitot, tekanan = $tekanan, temperatur = $temperatur, kelembapan = $kelembapan, barometer = $barometer, vklien = $vklien, vsatuan = $vsatuan, pklien = $pklien, psatuan = $psatuan, dibuat = time::now(), kegiatan = type::thing('kegiatan', $kegiatan);",
     {
       barometer,
       frekuensi,
