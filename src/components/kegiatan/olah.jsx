@@ -7,7 +7,7 @@ import { AppContext } from "../../stores";
 import { buatKegiatan, updateKegiatan } from "../../lib/handlers/kegiatan";
 
 export default function OlahKegiatan() {
-  const { state, _ } = useContext(AppContext);
+  const { state } = useContext(AppContext);
 
   const [peralatan, setPeralatan] = createSignal(null);
   const [peralatanPesan, setPeralatanPesan] = createSignal(null);
@@ -17,7 +17,7 @@ export default function OlahKegiatan() {
   const [instansiPesan, setInstansiPesan] = createSignal(null);
   const [instansiError, setInstansiError] = createSignal(false);
 
-  const [kalibrasi, setKalibrasi] = createSignal("tekanan");
+  const [kalibrasi, setKalibrasi] = createSignal("semua");
   const [arsipkan, setArsipkan] = createSignal(false);
 
   const [pesan, setPesan] = createSignal(null);
@@ -195,6 +195,9 @@ export default function OlahKegiatan() {
           <span class="label-text">Jenis kalibrasi</span>
         </div>
         <select class="select select-bordered" onChange={onSelectKalibrasi}>
+          <option value="semua" selected={kalibrasi() === "semua"}>
+            Semuanya
+          </option>
           <option value="tekanan" selected={kalibrasi() === "tekanan"}>
             Tekanan
           </option>
