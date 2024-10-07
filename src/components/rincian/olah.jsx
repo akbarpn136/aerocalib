@@ -1,12 +1,18 @@
 import { z } from "zod";
+import { CircleX, Check } from "lucide-solid";
 import { useParams } from "@solidjs/router";
-import { createStore } from "solid-js/store";
-import { Show } from "solid-js";
+import { createStore, produce } from "solid-js/store";
+import { Show, Switch, Match, useContext } from "solid-js";
+
+import { AppContext } from "../../stores";
+import { buatSensor } from "../../lib/handlers/sensor";
 
 export default function OlahSensor() {
   const params = useParams();
+  const { state } = useContext(AppContext);
   const [store, setStore] = createStore({
-    validkah: false,
+    validkah: true,
+    submitpesan: { pesanerror: null, pesansuccess: null },
     run: { value: 1, error: null },
     polar: { value: 1, error: null },
     frekuensi: { value: 0, error: null },
@@ -36,9 +42,10 @@ export default function OlahSensor() {
     })
     .required();
 
-  const onFormSubmit = (e) => {
+  const onFormSubmit = async (e) => {
     e.preventDefault();
 
+    const db = state.surreal;
     const kegiatanId = params.id;
     const payload = {
       run: store.run.value,
@@ -58,9 +65,27 @@ export default function OlahSensor() {
       setStore("validkah", true);
 
       const user_data = {
-        id: kegiatanId,
+        db,
+        psatuan: store.psatuan,
+        vsatuan: store.vsatuan,
+        kegiatan: kegiatanId,
         ...payload,
       };
+
+      try {
+        const result = await buatSensor({ ...user_data });
+        const id = result[0]["id"]["id"]
+
+        setStore("submitpesan", produce((data) => {
+          data.pesanerror = null;
+          data.pesansuccess = `Data ${id} berhasil disimpan`;
+        }));
+      } catch (err) {
+        setStore("submitpesan", produce((data) => {
+          data.pesansuccess = null;
+          data.pesanerror = err.message;
+        }));
+      }
     } else {
       setStore("validkah", false);
       valid.error.issues.forEach((err) => {
@@ -113,6 +138,24 @@ export default function OlahSensor() {
 
   return (
     <form onSubmit={onFormSubmit}>
+      <Switch>
+        <Match when={store.submitpesan.pesanerror}>
+          <div role="alert" class="alert alert-error">
+            <CircleX size={19} />
+            <span>{store.submitpesan.pesanerror}</span>
+            <button class="btn btn-sm" onClick={() => setStore("submitpesan", "pesanerror", null)}>Tutup</button>
+          </div>
+        </Match>
+
+        <Match when={store.submitpesan.pesansuccess} >
+          <div role="alert" class="alert alert-success">
+            <Check size={19} />
+            <span>{store.submitpesan.pesansuccess}</span>
+            <button class="btn btn-sm" onClick={() => setStore("submitpesan", "pesansuccess", null)}>Tutup</button>
+          </div>
+        </Match>
+      </Switch>
+
       <div class="grid gap-6 mb-5 md:grid-cols-2">
         <label class="form-control w-full">
           <div class="label">
@@ -358,6 +401,9 @@ export default function OlahSensor() {
             </option>
             <option value="ft/s" selected={store.vsatuan == "ft/s"}>
               ft/s
+            </option>
+            <option value="ft/min" selected={store.vsatuan == "ft/min"}>
+              ft/min
             </option>
             <option value="in/h" selected={store.vsatuan == "in/h"}>
               in/h
