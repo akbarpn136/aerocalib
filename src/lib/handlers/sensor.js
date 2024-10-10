@@ -35,3 +35,9 @@ export const buatSensor = async ({
 
   return result[0];
 };
+
+export const readSensor = async ({ db }) => {
+  const result = await db.query("SELECT * FROM sensor;")
+
+  return result[0]
+}
