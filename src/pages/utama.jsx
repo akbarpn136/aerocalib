@@ -245,7 +245,7 @@ export default function HalamanUtama() {
             <Switch>
               <Match when={!kosong()}>
                 <For each={state.kegiatan}>
-                  {(item, index) => {
+                  {(item) => {
                     return (
                       <tr>
                         <th scope="row">{item.peralatan}</th>
