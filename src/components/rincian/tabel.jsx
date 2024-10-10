@@ -1,5 +1,5 @@
 import { CircleX } from "lucide-solid";
-import { createResource, useContext, Suspense, Switch, Match, For } from "solid-js";
+import { createEffect, createResource, useContext, Suspense, Switch, Match, For } from "solid-js";
 import { AppContext } from "../../stores";
 import { readSensor } from "../../lib/handlers/sensor";
 
@@ -12,7 +12,11 @@ export default function DefaultTable() {
     return result
   }
 
-  const [sensor] = createResource(fetchSensor)
+  const [sensor, { refetch }] = createResource(fetchSensor)
+
+  createEffect(() => {
+    if (state.sensorid) refetch()
+  })
 
   return (
     <div class="pb-5">
