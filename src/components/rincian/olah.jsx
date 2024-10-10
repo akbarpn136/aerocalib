@@ -238,7 +238,6 @@ export default function OlahSensor() {
           <input
             type="number"
             placeholder="Kecepatan yang dibaca oleh pitot"
-            min="0"
             step=".01"
             class="input input-bordered w-full"
             value={store.vpitot.value}
@@ -263,7 +262,6 @@ export default function OlahSensor() {
           <input
             type="number"
             placeholder="Tekanan dinamik terukur"
-            min="0"
             step=".01"
             class="input input-bordered w-full"
             value={store.tekanan.value}
@@ -367,7 +365,6 @@ export default function OlahSensor() {
           <input
             type="number"
             placeholder="Instrumen kecepatan udara"
-            min="0"
             step=".01"
             class="input input-bordered w-full"
             value={store.vklien.value}
@@ -425,7 +422,6 @@ export default function OlahSensor() {
           <input
             type="number"
             placeholder="Instrumen tekanan dinamik"
-            min="0"
             step=".01"
             class="input input-bordered w-full"
             value={store.pklien.value}
