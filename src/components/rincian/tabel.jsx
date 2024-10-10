@@ -1,68 +1,96 @@
+import { CircleX } from "lucide-solid";
+import { createResource, useContext, Suspense, Switch, Match, For } from "solid-js";
+import { AppContext } from "../../stores";
+import { readSensor } from "../../lib/handlers/sensor";
+
 export default function DefaultTable() {
+  const { state } = useContext(AppContext)
+
+  const fetchSensor = async () => {
+    const result = await readSensor({ db: state.surreal })
+
+    return result
+  }
+
+  const [sensor] = createResource(fetchSensor)
+
   return (
     <div class="pb-5">
       <div class="overflow-x-auto">
-        <table class="table table-zebra table-xs border">
-          <thead>
-            <tr>
-              <th>Run</th>
-              <th>Polar</th>
-              <th>Frekuensi (Hz)</th>
-              <th>V Pitot (m/s)</th>
-              <th>P (Pa)</th>
-              <th>T (°C)</th>
-              <th>H (% rh)</th>
-              <th>Pb (hPa)</th>
-              <th>V Klien (ft/min)</th>
-              <th>P Klien (inH2O)</th>
-              <th>Dibuat</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th>1</th>
-              <th>1</th>
-              <td>7.3</td>
-              <td>5</td>
-              <td>14.8</td>
-              <td>25.8</td>
-              <td>93.4</td>
-              <td>1004.1</td>
-              <td>1200.00</td>
-              <td>0.09</td>
-              <td>Selasa, 24 September 2024 pukul 17.27</td>
-            </tr>
+        <Suspense fallback={<div class="skeleton h-4 w-full" />}>
+          <Switch>
+            <Match when={sensor.error}>
+              <div role="alert" class="alert alert-error">
+                <CircleX size={19} />
+                <span>{sensor.error.message}</span>
+              </div>
+            </Match>
 
-            <tr>
-              <th>1</th>
-              <th>1</th>
-              <td>14.00</td>
-              <td>10.01</td>
-              <td>59</td>
-              <td>26.9</td>
-              <td>93.4</td>
-              <td>1002.9</td>
-              <td>2250.00</td>
-              <td>0.32</td>
-              <td>Selasa, 24 September 2024 pukul 16.28</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th>Run</th>
-              <th>Polar</th>
-              <th>Frekuensi (Hz)</th>
-              <th>V Pitot (m/s)</th>
-              <th>P (Pa)</th>
-              <th>T (°C)</th>
-              <th>H (% rh)</th>
-              <th>Pb (hPa)</th>
-              <th>V Klien (ft/min)</th>
-              <th>P Klien (inH2O)</th>
-              <th>Dibuat</th>
-            </tr>
-          </tfoot>
-        </table>
+            <Match when={sensor()}>
+              <table class="table table-zebra table-xs border">
+                <thead>
+                  <tr>
+                    <th>Run</th>
+                    <th>Polar</th>
+                    <th>Frekuensi (Hz)</th>
+                    <th>V Pitot (m/s)</th>
+                    <th>P (Pa)</th>
+                    <th>T (°C)</th>
+                    <th>H (% rh)</th>
+                    <th>Pb (hPa)</th>
+                    <th>V Klien</th>
+                    <th>P Klien</th>
+                    <th>Dibuat</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <Switch>
+                    <Match when={sensor().length > 0}>
+                      <For each={sensor()}>{(sen) => <tr>
+                        <th>{sen.run}</th>
+                        <th>{sen.polar}</th>
+                        <td>{parseFloat(sen.frekuensi)}</td>
+                        <td>{parseFloat(sen.vpitot)}</td>
+                        <td>{parseFloat(sen.tekanan)}</td>
+                        <td>{parseFloat(sen.temperatur)}</td>
+                        <td>{parseFloat(sen.kelembapan)}</td>
+                        <td>{parseFloat(sen.barometer)}</td>
+                        <td>{parseFloat(sen.vklien)} {sen.vsatuan}</td>
+                        <td>{parseFloat(sen.pklien)} {sen.psatuan}</td>
+                        <td>{sen.dibuat.toLocaleString("id-id", {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                        </td>
+                      </tr>
+                      }</For>
+                    </Match>
+
+                    <Match when={sensor().length == 0}>
+                      <tr>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                    </Match>
+                  </Switch>
+                </tbody>
+              </table>
+            </Match>
+          </Switch>
+        </Suspense>
       </div>
     </div>
   );
