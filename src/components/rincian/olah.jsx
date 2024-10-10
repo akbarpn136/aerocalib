@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { CircleX, Check } from "lucide-solid";
-import { useParams } from "@solidjs/router";
+import { useParams, useSearchParams } from "@solidjs/router";
 import { createStore, produce } from "solid-js/store";
 import { Show, Switch, Match, useContext } from "solid-js";
 
@@ -9,6 +9,7 @@ import { buatSensor } from "../../lib/handlers/sensor";
 
 export default function OlahSensor() {
   const params = useParams();
+  const [searchParams] = useSearchParams()
   const { state } = useContext(AppContext);
   const [store, setStore] = createStore({
     validkah: true,
@@ -371,6 +372,7 @@ export default function OlahSensor() {
             onInput={(e) =>
               setStore("vklien", "value", parseFloat(e.currentTarget.value))
             }
+            disabled={searchParams.kalibrasi === "tekanan"}
           />
 
           <Show when={!store.validkah}>
@@ -386,7 +388,7 @@ export default function OlahSensor() {
           <div class="label">
             <span class="label-text">Satuan</span>
           </div>
-          <select class="select select-bordered">
+          <select class="select select-bordered" onChange={(e) => setStore("vsatuan", e.currentTarget.value)} disabled={searchParams.kalibrasi === "tekanan"}>
             <option value="m/s" selected={store.vsatuan == "m/s"}>
               m/s
             </option>
@@ -428,6 +430,7 @@ export default function OlahSensor() {
             onInput={(e) =>
               setStore("pklien", "value", parseFloat(e.currentTarget.value))
             }
+            disabled={searchParams.kalibrasi === "kecepatan"}
           />
 
           <Show when={!store.validkah}>
@@ -443,7 +446,7 @@ export default function OlahSensor() {
           <div class="label">
             <span class="label-text">Satuan</span>
           </div>
-          <select class="select select-bordered">
+          <select class="select select-bordered" onChange={(e) => setStore("psatuan", e.currentTarget.value)} disabled={searchParams.kalibrasi === "kecepatan"}>
             <option value="Pa" selected={store.psatuan == "Pa"}>
               Pa
             </option>
