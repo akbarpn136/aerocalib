@@ -10,7 +10,7 @@ import { buatSensor } from "../../lib/handlers/sensor";
 export default function OlahSensor() {
   const params = useParams();
   const [searchParams] = useSearchParams()
-  const { state } = useContext(AppContext);
+  const { state, setState } = useContext(AppContext);
   const [store, setStore] = createStore({
     validkah: true,
     submitpesan: { pesanerror: null, pesansuccess: null },
@@ -76,6 +76,8 @@ export default function OlahSensor() {
       try {
         const result = await buatSensor({ ...user_data });
         const id = result[0]["id"]["id"]
+
+        setState("sensorid", id)
 
         setStore("submitpesan", produce((data) => {
           data.pesanerror = null;
