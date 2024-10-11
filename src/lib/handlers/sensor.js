@@ -36,8 +36,10 @@ export const buatSensor = async ({
   return result[0];
 };
 
-export const readSensor = async ({ db }) => {
-  const result = await db.query("SELECT * FROM sensor ORDER By dibuat;")
+export const readSensor = async ({ db, kegiatan }) => {
+  const result = await db.query("SELECT * FROM sensor WHERE kegiatan = type::thing('kegiatan', $kegiatan) ORDER BY dibuat;", {
+    kegiatan
+  })
 
   return result[0]
 }
