@@ -1,22 +1,35 @@
 import { CircleX } from "lucide-solid";
-import { createEffect, createResource, useContext, Suspense, Switch, Match, For } from "solid-js";
+import { useParams } from "@solidjs/router";
+import {
+  createEffect,
+  createResource,
+  useContext,
+  Suspense,
+  Switch,
+  Match,
+  For,
+} from "solid-js";
 import { AppContext } from "../../stores";
 import { readSensor } from "../../lib/handlers/sensor";
 
 export default function DefaultTable() {
-  const { state } = useContext(AppContext)
+  const { state } = useContext(AppContext);
+  const params = useParams();
 
-  const fetchSensor = async () => {
-    const result = await readSensor({ db: state.surreal })
+  const fetchSensor = async (kegiatanid) => {
+    const result = await readSensor({
+      db: state.surreal,
+      kegiatan: kegiatanid,
+    });
 
-    return result
-  }
+    return result;
+  };
 
-  const [sensor, { refetch }] = createResource(fetchSensor)
+  const [sensor, { refetch }] = createResource(params.id, fetchSensor);
 
   createEffect(() => {
-    if (state.sensorid) refetch()
-  })
+    if (state.sensorid) refetch();
+  });
 
   return (
     <div class="pb-5">
@@ -50,28 +63,36 @@ export default function DefaultTable() {
                 <tbody>
                   <Switch>
                     <Match when={sensor().length > 0}>
-                      <For each={sensor()}>{(sen) => <tr>
-                        <th>{sen.run}</th>
-                        <th>{sen.polar}</th>
-                        <td>{parseFloat(sen.frekuensi)}</td>
-                        <td>{parseFloat(sen.vpitot)}</td>
-                        <td>{parseFloat(sen.tekanan)}</td>
-                        <td>{parseFloat(sen.temperatur)}</td>
-                        <td>{parseFloat(sen.kelembapan)}</td>
-                        <td>{parseFloat(sen.barometer)}</td>
-                        <td>{parseFloat(sen.vklien)} {sen.vsatuan}</td>
-                        <td>{parseFloat(sen.pklien)} {sen.psatuan}</td>
-                        <td>{sen.dibuat.toLocaleString("id-id", {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                        </td>
-                      </tr>
-                      }</For>
+                      <For each={sensor()}>
+                        {(sen) => (
+                          <tr>
+                            <th>{sen.run}</th>
+                            <th>{sen.polar}</th>
+                            <td>{parseFloat(sen.frekuensi)}</td>
+                            <td>{parseFloat(sen.vpitot)}</td>
+                            <td>{parseFloat(sen.tekanan)}</td>
+                            <td>{parseFloat(sen.temperatur)}</td>
+                            <td>{parseFloat(sen.kelembapan)}</td>
+                            <td>{parseFloat(sen.barometer)}</td>
+                            <td>
+                              {parseFloat(sen.vklien)} {sen.vsatuan}
+                            </td>
+                            <td>
+                              {parseFloat(sen.pklien)} {sen.psatuan}
+                            </td>
+                            <td>
+                              {sen.dibuat.toLocaleString("id-id", {
+                                weekday: "long",
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </td>
+                          </tr>
+                        )}
+                      </For>
                     </Match>
 
                     <Match when={sensor().length == 0}>
