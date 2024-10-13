@@ -9,7 +9,7 @@ import { buatSensor } from "../../lib/handlers/sensor";
 
 export default function OlahSensor() {
   const params = useParams();
-  const [searchParams] = useSearchParams()
+  const [searchParams] = useSearchParams();
   const { state, setState } = useContext(AppContext);
   const [store, setStore] = createStore({
     validkah: true,
@@ -23,9 +23,7 @@ export default function OlahSensor() {
     kelembapan: { value: 0, error: null },
     barometer: { value: 0, error: null },
     vklien: { value: 0, error: null },
-    vsatuan: "m/s",
     pklien: { value: 0, error: null },
-    psatuan: "Pa",
   });
 
   const sensor = z
@@ -62,32 +60,48 @@ export default function OlahSensor() {
     };
 
     const valid = sensor.safeParse(payload);
+
+    setStore("run", "error", null);
+    setStore("polar", "error", null);
+    setStore("frekuensi", "error", null);
+    setStore("vpitot", "error", null);
+    setStore("tekanan", "error", null);
+    setStore("temperatur", "error", null);
+    setStore("kelembapan", "error", null);
+    setStore("barometer", "error", null);
+    setStore("vklien", "error", null);
+    setStore("pklien", "error", null);
+
     if (valid.success) {
       setStore("validkah", true);
 
       const user_data = {
         db,
-        psatuan: store.psatuan,
-        vsatuan: store.vsatuan,
         kegiatan: kegiatanId,
         ...payload,
       };
 
       try {
         const result = await buatSensor({ ...user_data });
-        const id = result[0]["id"]["id"]
+        const id = result[0]["id"]["id"];
 
-        setState("sensorid", id)
+        setState("sensorid", id);
 
-        setStore("submitpesan", produce((data) => {
-          data.pesanerror = null;
-          data.pesansuccess = `Data ${id} berhasil disimpan`;
-        }));
+        setStore(
+          "submitpesan",
+          produce((data) => {
+            data.pesanerror = null;
+            data.pesansuccess = `Data ${id} berhasil disimpan`;
+          })
+        );
       } catch (err) {
-        setStore("submitpesan", produce((data) => {
-          data.pesansuccess = null;
-          data.pesanerror = err.message;
-        }));
+        setStore(
+          "submitpesan",
+          produce((data) => {
+            data.pesansuccess = null;
+            data.pesanerror = err.message;
+          })
+        );
       }
     } else {
       setStore("validkah", false);
@@ -146,15 +160,25 @@ export default function OlahSensor() {
           <div role="alert" class="alert alert-error">
             <CircleX size={19} />
             <span>{store.submitpesan.pesanerror}</span>
-            <button class="btn btn-sm" onClick={() => setStore("submitpesan", "pesanerror", null)}>Tutup</button>
+            <button
+              class="btn btn-sm"
+              onClick={() => setStore("submitpesan", "pesanerror", null)}
+            >
+              Tutup
+            </button>
           </div>
         </Match>
 
-        <Match when={store.submitpesan.pesansuccess} >
+        <Match when={store.submitpesan.pesansuccess}>
           <div role="alert" class="alert alert-success">
             <Check size={19} />
             <span>{store.submitpesan.pesansuccess}</span>
-            <button class="btn btn-sm" onClick={() => setStore("submitpesan", "pesansuccess", null)}>Tutup</button>
+            <button
+              class="btn btn-sm"
+              onClick={() => setStore("submitpesan", "pesansuccess", null)}
+            >
+              Tutup
+            </button>
           </div>
         </Match>
       </Switch>
@@ -387,7 +411,11 @@ export default function OlahSensor() {
           <div class="label">
             <span class="label-text">Satuan</span>
           </div>
-          <select class="select select-bordered" onChange={(e) => setStore("vsatuan", e.currentTarget.value)} disabled={searchParams.kalibrasi === "tekanan"}>
+          <select
+            class="select select-bordered"
+            onChange={(e) => setStore("vsatuan", e.currentTarget.value)}
+            disabled={searchParams.kalibrasi === "tekanan"}
+          >
             <option value="m/s" selected={store.vsatuan == "m/s"}>
               m/s
             </option>
@@ -444,7 +472,11 @@ export default function OlahSensor() {
           <div class="label">
             <span class="label-text">Satuan</span>
           </div>
-          <select class="select select-bordered" onChange={(e) => setStore("psatuan", e.currentTarget.value)} disabled={searchParams.kalibrasi === "kecepatan"}>
+          <select
+            class="select select-bordered"
+            onChange={(e) => setStore("psatuan", e.currentTarget.value)}
+            disabled={searchParams.kalibrasi === "kecepatan"}
+          >
             <option value="Pa" selected={store.psatuan == "Pa"}>
               Pa
             </option>
