@@ -267,7 +267,13 @@ export default function HalamanUtama() {
                         </td>
                         <td>
                           <A
-                            href={`${item.id.id}/rincian?peralatan=${item.peralatan}&instansi=${item.instansi}&kalibrasi=${item.kalibrasi}&arsip=${item.arsip}`}
+                            href={`${item.id.id}/rincian?peralatan=${
+                              item.peralatan
+                            }&instansi=${item.instansi}&kalibrasi=${
+                              item.kalibrasi
+                            }&psatuan=${item.psatuan || "Pa"}&vsatuan=${
+                              item.vsatuan || "m/s"
+                            }&arsip=${item.arsip}`}
                             class="btn btn-ghost btn-sm"
                           >
                             <EllipsisVertical size={19} />
