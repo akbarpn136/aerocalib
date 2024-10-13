@@ -1,27 +1,24 @@
 import { z } from "zod";
 import { Save, CircleX } from "lucide-solid";
+import { createStore } from "solid-js/store";
 import { useParams, useSearchParams } from "@solidjs/router";
-import { Show, useContext, createSignal, createEffect } from "solid-js";
+import { Show, useContext, createEffect } from "solid-js";
 
 import { AppContext } from "../../stores";
 import { buatKegiatan, updateKegiatan } from "../../lib/handlers/kegiatan";
 
 export default function OlahKegiatan() {
   const { state } = useContext(AppContext);
-
-  const [peralatan, setPeralatan] = createSignal(null);
-  const [peralatanPesan, setPeralatanPesan] = createSignal(null);
-  const [peralatanError, setPeralatanError] = createSignal(false);
-
-  const [instansi, setInstansi] = createSignal(null);
-  const [instansiPesan, setInstansiPesan] = createSignal(null);
-  const [instansiError, setInstansiError] = createSignal(false);
-
-  const [kalibrasi, setKalibrasi] = createSignal("semua");
-  const [arsipkan, setArsipkan] = createSignal(false);
-
-  const [pesan, setPesan] = createSignal(null);
-  const [ubah, setUbah] = createSignal(false);
+  const [store, setStore] = createStore({
+    vsatuan: "m/s",
+    psatuan: "Pa",
+    kalibrasi: "semua",
+    arsip: false,
+    pesan: null,
+    ubah: false,
+    peralatan: { value: null, error: null },
+    instansi: { value: null, error: null },
+  });
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -40,48 +37,57 @@ export default function OlahKegiatan() {
     const db = state.surreal;
 
     const valid = Kegiatan.safeParse({
-      peralatan: peralatan(),
-      instansi: instansi(),
+      peralatan: store.peralatan.value,
+      instansi: store.instansi.value,
     });
 
-    if (valid.success) {
-      setPeralatanError(false);
-      setPeralatanPesan(null);
+    setStore("peralatan", "error", null);
+    setStore("instansi", "error", null);
 
-      setInstansiError(false);
-      setInstansiPesan(null);
+    if (valid.success) {
+      setStore("peralatan", "value", null);
+      setStore("instansi", "value", null);
 
       const peralatan = valid.data.peralatan;
       const instansi = valid.data.instansi;
 
-      if (ubah()) {
+      if (store.ubah) {
         try {
-          setPesan(null);
+          setStore("pesan", null);
           const result = await updateKegiatan({
             db,
             id: params.id,
             peralatan,
             instansi,
-            kalibrasi: kalibrasi(),
-            arsip: arsipkan(),
+            kalibrasi: store.kalibrasi,
+            psatuan: store.psatuan,
+            vsatuan: store.vsatuan,
+            arsip: store.arsip,
           });
 
           setSearchParams({
             peralatan: result[0].peralatan,
             instansi: result[0].instansi,
+            psatuan: result[0].psatuan,
+            vsatuan: result[0].vsatuan,
+            kalibrasi: result[0].kalibrasi,
           });
+
+          document.getElementById("modal_olah_kegiatan").close();
         } catch (err) {
-          setPesan(err.message);
+          setStore("pesan", err.message);
         }
       } else {
         try {
-          setPesan(null);
+          setStore("pesan", null);
 
           await buatKegiatan({
             db,
             peralatan,
             instansi,
-            kalibrasi: kalibrasi(),
+            kalibrasi: store.kalibrasi,
+            vsatuan: store.vsatuan,
+            psatuan: store.psatuan,
           });
 
           setSearchParams({
@@ -89,52 +95,52 @@ export default function OlahKegiatan() {
             arsip: false,
           });
 
-          setPeralatan(null);
-          setInstansi(null);
-          setKalibrasi("tekanan");
+          document.getElementById("modal_olah_kegiatan").close();
         } catch (err) {
-          setPesan(err.message);
+          setStore("pesan", err.message);
         }
       }
-
-      document.getElementById("modal_olah_kegiatan").close();
     } else {
       valid.error.issues.forEach((err) => {
-        if (err.path[0] === "peralatan") {
-          setPeralatanError(true);
-          setPeralatanPesan(err.message);
-        } else {
-          setInstansiError(true);
-          setInstansiPesan(err.message);
+        const kategori = err.path[0];
+
+        switch (kategori) {
+          case "peralatan":
+            setStore("peralatan", "error", err.message);
+            break;
+
+          case "instansi":
+            setStore("instansi", "error", err.message);
+            break;
         }
       });
     }
   };
 
-  const onSelectKalibrasi = (e) => {
-    setKalibrasi(e.currentTarget.value);
-  };
-
   createEffect(() => {
     if (params.id == null) {
-      setUbah(false);
-      setPeralatan(null);
-      setInstansi(null);
+      setStore("ubah", false);
+      setStore("peralatan", "value", null);
+      setStore("instansi", "value", null);
+      setStore("psatuan", "Pa");
+      setStore("vsatuan", "m/s");
     } else {
-      setUbah(true);
-      setPeralatan(searchParams.peralatan);
-      setInstansi(searchParams.instansi);
-      setKalibrasi(searchParams.kalibrasi);
-      setArsipkan(searchParams.arsip === "true");
+      setStore("ubah", true);
+      setStore("peralatan", "value", searchParams.peralatan);
+      setStore("instansi", "value", searchParams.instansi);
+      setStore("psatuan", searchParams.psatuan);
+      setStore("vsatuan", searchParams.vsatuan);
+      setStore("kalibrasi", searchParams.kalibrasi);
+      setStore("arsip", searchParams.arsip === "true");
     }
   });
 
   return (
     <form class="space-y-4">
-      <Show when={pesan()}>
+      <Show when={store.pesan}>
         <div role="alert" class="alert alert-error">
           <CircleX size={19} />
-          <span>{pesan()}</span>
+          <span>{store.pesan}</span>
         </div>
       </Show>
 
@@ -149,17 +155,19 @@ export default function OlahKegiatan() {
           id="peralatan"
           class="input input-bordered w-full"
           classList={{
-            "input-error": peralatanError(),
-            "": !peralatanError(),
+            "input-error": store.peralatan.error,
+            "": !store.peralatan.error,
           }}
           placeholder="Nama peralatan"
-          value={peralatan()}
-          onInput={(e) => setPeralatan(e.currentTarget.value)}
+          value={store.peralatan.value}
+          onInput={(e) => setStore("peralatan", "value", e.currentTarget.value)}
         />
 
-        <Show when={peralatanError()}>
+        <Show when={store.peralatan.error}>
           <div class="label">
-            <span class="label-text-alt text-error">{peralatanPesan}</span>
+            <span class="label-text-alt text-error">
+              {store.peralatan.error}
+            </span>
           </div>
         </Show>
       </label>
@@ -175,17 +183,19 @@ export default function OlahKegiatan() {
           id="instansi"
           class="input input-bordered w-full"
           classList={{
-            "input-error": instansiError(),
-            "": !instansiError(),
+            "input-error": store.instansi.error,
+            "": !store.instansi.error,
           }}
           placeholder="Instansi atau perusahaan"
-          value={instansi()}
-          onInput={(e) => setInstansi(e.currentTarget.value)}
+          value={store.instansi.value}
+          onInput={(e) => setStore("instansi", "value", e.currentTarget.value)}
         />
 
-        <Show when={instansiError()}>
+        <Show when={store.instansi.error}>
           <div class="label">
-            <span class="label-text-alt text-error">{instansiPesan}</span>
+            <span class="label-text-alt text-error">
+              {store.instansi.error}
+            </span>
           </div>
         </Show>
       </label>
@@ -194,28 +204,114 @@ export default function OlahKegiatan() {
         <div class="label">
           <span class="label-text">Jenis kalibrasi</span>
         </div>
-        <select class="select select-bordered" onChange={onSelectKalibrasi}>
-          <option value="semua" selected={kalibrasi() === "semua"}>
+        <select
+          class="select select-bordered"
+          onChange={(e) => setStore("kalibrasi", e.currentTarget.value)}
+        >
+          <option value="semua" selected={store.kalibrasi === "semua"}>
             Semuanya
           </option>
-          <option value="tekanan" selected={kalibrasi() === "tekanan"}>
+          <option value="tekanan" selected={store.kalibrasi === "tekanan"}>
             Tekanan
           </option>
-          <option value="kecepatan" selected={kalibrasi() === "kecepatan"}>
+          <option value="kecepatan" selected={store.kalibrasi === "kecepatan"}>
             Kecepatan
           </option>
         </select>
       </label>
 
-      <Show when={ubah()}>
+      <div class="grid gap-6 mb-5 md:grid-cols-2">
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text">Satuan kecepatan klien</span>
+          </div>
+          <select
+            class="select select-bordered"
+            onChange={(e) => setStore("vsatuan", e.currentTarget.value)}
+            disabled={store.kalibrasi === "tekanan"}
+          >
+            <option value="m/s" selected={store.vsatuan == "m/s"}>
+              m/s
+            </option>
+            <option value="km/h" selected={store.vsatuan == "km/h"}>
+              km/h
+            </option>
+            <option value="mph" selected={store.vsatuan == "mph"}>
+              mph
+            </option>
+            <option value="knot" selected={store.vsatuan == "knot"}>
+              knot
+            </option>
+            <option value="ft/s" selected={store.vsatuan == "ft/s"}>
+              ft/s
+            </option>
+            <option value="ft/min" selected={store.vsatuan == "ft/min"}>
+              ft/min
+            </option>
+            <option value="in/h" selected={store.vsatuan == "in/h"}>
+              in/h
+            </option>
+            <option value="mm/h" selected={store.vsatuan == "mm/h"}>
+              mm/h
+            </option>
+          </select>
+        </label>
+
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text">Satuan tekanan klien</span>
+          </div>
+          <select
+            class="select select-bordered"
+            onChange={(e) => setStore("psatuan", e.currentTarget.value)}
+            disabled={store.kalibrasi === "kecepatan"}
+          >
+            <option value="Pa" selected={store.psatuan == "Pa"}>
+              Pa
+            </option>
+            <option value="hPa" selected={store.psatuan == "hPa"}>
+              hPa
+            </option>
+            <option value="kPa" selected={store.psatuan == "kPa"}>
+              kPa
+            </option>
+            <option value="MPa" selected={store.psatuan == "MPa"}>
+              MPa
+            </option>
+            <option value="bar" selected={store.psatuan == "bar"}>
+              bar
+            </option>
+            <option value="torr" selected={store.psatuan == "torr"}>
+              torr
+            </option>
+            <option value="mH2O" selected={store.psatuan == "mH2O"}>
+              mH2O
+            </option>
+            <option value="inH2O" selected={store.psatuan == "inH2O"}>
+              inH2O
+            </option>
+            <option value="mmHg" selected={store.psatuan == "mmHg"}>
+              mmHg
+            </option>
+            <option value="psi" selected={store.psatuan == "psi"}>
+              psi
+            </option>
+            <option value="ksi" selected={store.psatuan == "ksi"}>
+              ksi
+            </option>
+          </select>
+        </label>
+      </div>
+
+      <Show when={store.ubah}>
         <div class="form-control">
           <label class="label cursor-pointer">
             <span class="label-text">Arsipkan?</span>
             <input
               type="checkbox"
-              checked={arsipkan()}
+              checked={store.arsip}
               class="checkbox"
-              onClick={() => setArsipkan(!arsipkan())}
+              onClick={() => setStore("arsip", !store.arsip)}
             />
           </label>
         </div>
