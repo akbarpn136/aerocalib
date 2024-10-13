@@ -10,6 +10,8 @@ DEFINE FIELD dibuat ON TABLE kegiatan TYPE datetime;
 DEFINE FIELD instansi ON TABLE kegiatan TYPE string;
 DEFINE FIELD peralatan ON TABLE kegiatan TYPE string;
 DEFINE FIELD kalibrasi ON TABLE kegiatan TYPE string;
+DEFINE FIELD psatuan ON kegiatan TYPE option<string> DEFAULT 'Pa';
+DEFINE FIELD vsatuan ON kegiatan TYPE option<string> DEFAULT 'm/s';
 
 -- Define index
 DEFINE INDEX unique_peralatan ON TABLE kegiatan COLUMNS peralatan UNIQUE;
