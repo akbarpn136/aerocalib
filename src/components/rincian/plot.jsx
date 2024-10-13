@@ -40,7 +40,7 @@ export default function DefaultPlot() {
 
           xaxis2: { title: "Frekuensi (Hz)" },
           yaxis2: {
-            title: "Tekanan (Pa)",
+            title: `Tekanan (${searchParams.psatuan})`,
           },
           grid: { rows: 1, columns: 2, pattern: "independent" },
         };
@@ -79,7 +79,7 @@ export default function DefaultPlot() {
 
           xaxis2: { title: "Frekuensi (Hz)" },
           yaxis2: {
-            title: "Kecepatan (m/s)",
+            title: `Kecepatan (${searchParams.vsatuan})`,
           },
           grid: { rows: 1, columns: 2, pattern: "independent" },
         };
@@ -118,16 +118,17 @@ export default function DefaultPlot() {
 
           xaxis2: { title: "Frekuensi (Hz)" },
           yaxis2: {
-            title: "Tekanan (Pa)",
+            title: `Tekanan (${searchParams.psatuan})`,
           },
 
           xaxis3: { title: "Frekuensi (Hz)" },
           yaxis3: {
             title: "Kecepatan (m/s)",
           },
+
           xaxis4: { title: "Frekuensi (Hz)" },
           yaxis4: {
-            title: "Kecepatan (m/s)",
+            title: `Kecepatan (${searchParams.vsatuan})`,
           },
 
           grid: { rows: 2, columns: 2, pattern: "independent" },
@@ -179,6 +180,48 @@ export default function DefaultPlot() {
     }
 
     Plotly.newPlot(plot1, traces, layout, configs);
+  });
+
+  createEffect(() => {
+    let update;
+    const kalibrasi = searchParams.kalibrasi;
+
+    switch (kalibrasi) {
+      case "tekanan":
+        update = {
+          yaxis2: {
+            title: `Tekanan (${searchParams.psatuan})`,
+          },
+          grid: { rows: 1, columns: 2, pattern: "independent" },
+        };
+
+        break;
+
+      case "kecepatan":
+        update = {
+          yaxis2: {
+            title: `Kecepatan (${searchParams.vsatuan})`,
+          },
+          grid: { rows: 1, columns: 2, pattern: "independent" },
+        };
+
+        break;
+      default:
+        update = {
+          yaxis2: {
+            title: `Tekanan (${searchParams.psatuan})`,
+          },
+          yaxis4: {
+            title: `Kecepatan (${searchParams.vsatuan})`,
+          },
+          grid: { rows: 2, columns: 2, pattern: "independent" },
+        };
+
+        break;
+    }
+
+    Plotly.relayout(plot1, update);
+    Plotly.react(plot1, plot1.data, plot1.layout);
   });
 
   return <div ref={plot1} class="w-full h-full border shadow" />;
