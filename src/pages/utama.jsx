@@ -15,7 +15,6 @@ import {
   Suspense,
   useContext,
   createEffect,
-  createSignal,
   createResource,
   lazy,
 } from "solid-js";
@@ -28,149 +27,73 @@ export default function HalamanUtama() {
 
   const limit = Number(import.meta.env.VITE_LIMIT_KEGIATAN);
 
-  const { state, setState } = useContext(AppContext);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { state } = useContext(AppContext);
+  const [searchParams] = useSearchParams();
   const [store, setStore] = createStore({
     page: 1,
     cari: "",
-    arsip: false,
-    sebelumnya: true,
-    selanjutnya: true,
+    selanjutnya: false,
   });
-
-  const [page, setPage] = createSignal(1);
-  const [kata, setKata] = createSignal("");
-  const [kosong, setKosong] = createSignal(true);
-  const [sebelumnya, setSebelumnya] = createSignal(true);
-  const [selanjutnya, setSelanjutnya] = createSignal(true);
 
   const bacaKegiatan = async ({ db, page, limit, cari, arsip }) => {
     let hasil;
+    let hasil_next;
 
     if (cari !== "") {
       hasil = await cariKegiatan(db, page, limit, cari);
+      hasil_next = await cariKegiatan(db, page + 1, limit, cari);
     } else {
       hasil = await filterKegiatan(db, page, limit, arsip);
+      hasil_next = await filterKegiatan(db, page + 1, limit, arsip);
+    }
+
+    if (hasil_next.length > 0) {
+      setStore("selanjutnya", true);
+    } else {
+      setStore("selanjutnya", false);
     }
 
     return hasil;
   };
 
   const [kegiatan, { refetch }] = createResource(
-    {
+    () => ({
       limit,
       db: state.surreal,
       page: store.page,
       cari: store.cari,
-      arsip: store.arsip,
-    },
+      arsip: searchParams.arsip === "true",
+    }),
     bacaKegiatan
   );
 
   const nextPage = () => {
     setStore("page", store.page + 1);
-
-    refetch();
   };
 
   const prevPage = () => {
-    if (page() > 1) {
-      setPage(page() - 1);
+    if (store.page > 1) {
       setStore("page", store.page - 1);
     } else {
       setStore("page", 1);
     }
-
-    refetch();
-  };
-
-  const onFilterKegiatan = async (
-    db,
-    page,
-    limit,
-    cari = "",
-    arsip = false
-  ) => {
-    let hasil;
-    let hasil_next;
-
-    try {
-      if (cari !== "") {
-        hasil = await cariKegiatan(state.surreal, page, limit, cari);
-
-        hasil_next = await cariKegiatan(state.surreal, page + 1, limit, cari);
-      } else {
-        hasil = await filterKegiatan(db, page, limit, arsip);
-
-        hasil_next = await filterKegiatan(db, page + 1, limit, arsip);
-      }
-
-      if (hasil_next.length == 0) {
-        setSelanjutnya(false);
-      } else {
-        setSelanjutnya(true);
-      }
-
-      if (hasil.length > 0) {
-        setKosong(false);
-        setState("kegiatan", []); // reset empty dulu array
-        setState(
-          "kegiatan",
-          produce((keg) => {
-            hasil.forEach((el) => {
-              keg.push(el);
-            });
-          })
-        );
-      } else {
-        setState("kegiatan", []);
-        setKosong(true);
-      }
-    } catch (err) {
-      throw err;
-    }
   };
 
   const onCariPeralatan = async (e) => {
+    e.preventDefault();
+
     if (e.keyCode == 13) {
       setStore("page", 1);
       setStore("cari", e.currentTarget.value);
-
-      refetch();
     }
   };
 
-  createEffect(async () => {
-    const db = state.surreal;
+  createEffect(() => {
+    if (state.kegiatanid) {
+      setStore("page", 1);
+      setStore("arsip", false);
 
-    if (db !== null) {
-      if (searchParams.arsip == null) {
-        setPage(1);
-      }
-
-      try {
-        await onFilterKegiatan(
-          db,
-          searchParams.pagekegiatan ? parseInt(searchParams.pagekegiatan) : 1,
-          limit,
-          kata(),
-          searchParams.arsip ? searchParams.arsip === "true" : false
-        );
-      } catch (err) {
-        throw err;
-      }
-
-      if (state.kegiatan.length == 0) {
-        setKosong(true);
-      } else {
-        setKosong(false);
-      }
-
-      if (parseInt(searchParams.pagekegiatan) == 1 || page() == 1) {
-        setSebelumnya(false);
-      } else {
-        setSebelumnya(true);
-      }
+      refetch();
     }
   });
 
@@ -212,13 +135,13 @@ export default function HalamanUtama() {
                   </label>
 
                   <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-                    <Show when={sebelumnya()}>
+                    <Show when={store.page > 1}>
                       <li>
                         <button
                           type="button"
                           class="btn btn-sm"
                           classList={{
-                            "rounded-e-none": state.kegiatan.length == limit,
+                            "rounded-e-none": kegiatan().length == limit,
                           }}
                           onClick={prevPage}
                         >
@@ -227,14 +150,13 @@ export default function HalamanUtama() {
                       </li>
                     </Show>
 
-                    <Show when={selanjutnya()}>
+                    <Show when={store.selanjutnya}>
                       <li>
                         <button
                           type="button"
                           class="btn btn-sm"
                           classList={{
-                            "rounded-s-none":
-                              parseInt(searchParams.pagekegiatan) > 1,
+                            "rounded-s-none": store.page > 1,
                           }}
                           onClick={nextPage}
                         >
