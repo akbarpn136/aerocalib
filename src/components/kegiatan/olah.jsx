@@ -8,7 +8,7 @@ import { AppContext } from "../../stores";
 import { buatKegiatan, updateKegiatan } from "../../lib/handlers/kegiatan";
 
 export default function OlahKegiatan() {
-  const { state } = useContext(AppContext);
+  const { state, setState } = useContext(AppContext);
   const [store, setStore] = createStore({
     vsatuan: "m/s",
     psatuan: "Pa",
@@ -81,7 +81,7 @@ export default function OlahKegiatan() {
         try {
           setStore("pesan", null);
 
-          await buatKegiatan({
+          const result = await buatKegiatan({
             db,
             peralatan,
             instansi,
@@ -90,10 +90,9 @@ export default function OlahKegiatan() {
             psatuan: store.psatuan,
           });
 
-          setSearchParams({
-            pagekegiatan: 1,
-            arsip: false,
-          });
+          const createdKegiatanId = result[0]["id"]["id"];
+
+          setState("kegiatanid", createdKegiatanId);
 
           document.getElementById("modal_olah_kegiatan").close();
         } catch (err) {
