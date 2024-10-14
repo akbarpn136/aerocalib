@@ -123,7 +123,7 @@ export default function HalamanUtama() {
                 </Match>
 
                 <Match when={kegiatan().length > 0}>
-                  <label class="input input-bordered input-sm flex items-center gap-2">
+                  <label class="input input-bordered input-sm flex items-center gap-2 w-full sm:w-4/12">
                     <input
                       type="text"
                       class="grow"
@@ -134,7 +134,7 @@ export default function HalamanUtama() {
                     <Search size={19} />
                   </label>
 
-                  <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                  <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8 mt-2 sm:mt-0">
                     <Show when={store.page > 1}>
                       <li>
                         <button
