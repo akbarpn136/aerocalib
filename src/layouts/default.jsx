@@ -15,7 +15,7 @@ export default function Default(props) {
   const SidebarComponent = lazy(() => import("../components/sidebar"));
   const ToastSalahComponent = lazy(() => import("../components/toast/salah"));
 
-  const { _, setState } = useContext(AppContext);
+  const { setState } = useContext(AppContext);
 
   const connDb = async () => {
     const conn = await initDb();
