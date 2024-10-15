@@ -7,8 +7,8 @@ import { state, setState } from "../stores";
 export default function MainRoutes() {
   const PageKosong = lazy(() => import("../pages/404"));
   const PageTentang = lazy(() => import("../pages/tentang"));
-  const PageUtama = lazy(async () => import("../pages/utama"));
-  const PageRincian = lazy(async () => import("../pages/rincian"));
+  const PageUtama = lazy(() => import("../pages/utama"));
+  const PageRincian = lazy(() => import("../pages/rincian"));
 
   const LayoutUtama = lazy(async () => import("../layouts/default"));
 
