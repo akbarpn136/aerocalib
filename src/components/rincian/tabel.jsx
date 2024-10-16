@@ -15,7 +15,7 @@ import { readSensor } from "../../lib/handlers/sensor";
 export default function DefaultTable() {
   const params = useParams();
   const { state } = useContext(AppContext);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const fetchSensor = async (kegiatanid) => {
     const result = await readSensor({
