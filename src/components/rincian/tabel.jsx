@@ -1,5 +1,5 @@
 import { CircleX } from "lucide-solid";
-import { useParams } from "@solidjs/router";
+import { useParams, useSearchParams } from "@solidjs/router";
 import {
   createEffect,
   createResource,
@@ -13,8 +13,9 @@ import { AppContext } from "../../stores";
 import { readSensor } from "../../lib/handlers/sensor";
 
 export default function DefaultTable() {
-  const { state } = useContext(AppContext);
   const params = useParams();
+  const { state } = useContext(AppContext);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const fetchSensor = async (kegiatanid) => {
     const result = await readSensor({
@@ -55,8 +56,8 @@ export default function DefaultTable() {
                     <th>T (°C)</th>
                     <th>H (% rh)</th>
                     <th>Pb (hPa)</th>
-                    <th>V Klien</th>
-                    <th>P Klien</th>
+                    <th>V Klien ({searchParams.vsatuan})</th>
+                    <th>P Klien ({searchParams.psatuan})</th>
                     <th>Dibuat</th>
                   </tr>
                 </thead>
@@ -74,12 +75,8 @@ export default function DefaultTable() {
                             <td>{parseFloat(sen.temperatur)}</td>
                             <td>{parseFloat(sen.kelembapan)}</td>
                             <td>{parseFloat(sen.barometer)}</td>
-                            <td>
-                              {parseFloat(sen.vklien)} {sen.vsatuan}
-                            </td>
-                            <td>
-                              {parseFloat(sen.pklien)} {sen.psatuan}
-                            </td>
+                            <td>{parseFloat(sen.vklien)}</td>
+                            <td>{parseFloat(sen.pklien)}</td>
                             <td>
                               {sen.dibuat.toLocaleString("id-id", {
                                 weekday: "long",
