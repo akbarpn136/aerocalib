@@ -381,10 +381,12 @@ export default function OlahSensor() {
         </label>
       </div>
 
-      <div class="grid gap-6 mb-5 md:grid-cols-4">
+      <div class="grid gap-6 mb-5 md:grid-cols-2">
         <label class="form-control w-full">
           <div class="label">
-            <span class="label-text">Kecepatan udara klien</span>
+            <span class="label-text">
+              Kecepatan udara klien ({searchParams.vsatuan})
+            </span>
           </div>
           <input
             type="number"
@@ -409,43 +411,9 @@ export default function OlahSensor() {
 
         <label class="form-control w-full">
           <div class="label">
-            <span class="label-text">Satuan</span>
-          </div>
-          <select
-            class="select select-bordered"
-            onChange={(e) => setStore("vsatuan", e.currentTarget.value)}
-            disabled={searchParams.kalibrasi === "tekanan"}
-          >
-            <option value="m/s" selected={store.vsatuan == "m/s"}>
-              m/s
-            </option>
-            <option value="km/h" selected={store.vsatuan == "km/h"}>
-              km/h
-            </option>
-            <option value="mph" selected={store.vsatuan == "mph"}>
-              mph
-            </option>
-            <option value="knot" selected={store.vsatuan == "knot"}>
-              knot
-            </option>
-            <option value="ft/s" selected={store.vsatuan == "ft/s"}>
-              ft/s
-            </option>
-            <option value="ft/min" selected={store.vsatuan == "ft/min"}>
-              ft/min
-            </option>
-            <option value="in/h" selected={store.vsatuan == "in/h"}>
-              in/h
-            </option>
-            <option value="mm/h" selected={store.vsatuan == "mm/h"}>
-              mm/h
-            </option>
-          </select>
-        </label>
-
-        <label class="form-control w-full">
-          <div class="label">
-            <span class="label-text">Tekanan dinamik klien</span>
+            <span class="label-text">
+              Tekanan dinamik klien ({searchParams.psatuan})
+            </span>
           </div>
           <input
             type="number"
@@ -466,51 +434,6 @@ export default function OlahSensor() {
               </span>
             </div>
           </Show>
-        </label>
-
-        <label class="form-control w-full">
-          <div class="label">
-            <span class="label-text">Satuan</span>
-          </div>
-          <select
-            class="select select-bordered"
-            onChange={(e) => setStore("psatuan", e.currentTarget.value)}
-            disabled={searchParams.kalibrasi === "kecepatan"}
-          >
-            <option value="Pa" selected={store.psatuan == "Pa"}>
-              Pa
-            </option>
-            <option value="hPa" selected={store.psatuan == "hPa"}>
-              hPa
-            </option>
-            <option value="kPa" selected={store.psatuan == "kPa"}>
-              kPa
-            </option>
-            <option value="MPa" selected={store.psatuan == "MPa"}>
-              MPa
-            </option>
-            <option value="bar" selected={store.psatuan == "bar"}>
-              bar
-            </option>
-            <option value="torr" selected={store.psatuan == "torr"}>
-              torr
-            </option>
-            <option value="mH2O" selected={store.psatuan == "mH2O"}>
-              mH2O
-            </option>
-            <option value="inH2O" selected={store.psatuan == "inH2O"}>
-              inH2O
-            </option>
-            <option value="mmHg" selected={store.psatuan == "mmHg"}>
-              mmHg
-            </option>
-            <option value="psi" selected={store.psatuan == "psi"}>
-              psi
-            </option>
-            <option value="ksi" selected={store.psatuan == "ksi"}>
-              ksi
-            </option>
-          </select>
         </label>
       </div>
 
