@@ -21,6 +21,14 @@ pub fn run() {
 
             Ok(())
         })
+        .on_window_event(move |window, event| match event {
+            tauri::WindowEvent::Destroyed => {
+                println!("STOP");
+
+                window.close().unwrap();
+            }
+            _ => {}
+        })
         .plugin(tauri_plugin_shell::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
