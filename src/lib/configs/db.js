@@ -1,4 +1,4 @@
-import { Surreal } from "surrealdb.js"
+import Surreal from "surrealdb"
 
 const SurrealUrl = import.meta.env.VITE_SURREALDB_URL
 const SurrealUser = import.meta.env.VITE_SURREALDB_USER
